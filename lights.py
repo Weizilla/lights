@@ -5,10 +5,13 @@ import Adafruit_CharLCD as LCD
 import RPi.GPIO as io
 import schedule
 
+io.setmode(io.BCM)
+BIG_BUTTON = 22
 buttons = (LCD.SELECT, LCD.LEFT, LCD.UP, LCD.DOWN, LCD.RIGHT)
 
 class Lights(object):
     def __init__(self):
+        self.light = True
         self.on_time = "5:45"
         schedule.every().day.at(self.on_time).do(self.light_on)
 
@@ -16,14 +19,22 @@ class Lights(object):
         schedule.every().day.at(self.off_time).do(self.light_off)
 
         self.powertail_pin = 23
-        io.setmode(io.BCM)
         io.setup(self.powertail_pin, io.OUT)
 
     def light_on(self):
-        io.output(self.powertail_pin, True) 
+        self.light = True
+        self.update_powertail()
 
     def light_off(self):
-        io.output(self.powertail_pin, False)
+        self.light = False
+        self.update_powertail()
+
+    def toggle_light(self):
+        self.light = not self.light
+        self.update_powertail()
+
+    def update_powertail(self):
+        io.output(self.powertail_pin, self.light) 
 
     def light_on_menu(self):
         return ("On Time {}".format(self.on_time), self.light_on)
@@ -44,6 +55,8 @@ class Menu(object):
         self.clear_lcd()
         self.update_backlight()
 
+        io.setup(BIG_BUTTON, io.IN, pull_up_down=io.PUD_UP)
+
     def clear_lcd(self):
         self.lcd.clear()
         self.lcd.set_color(1.0, 0.0, 0.0)
@@ -56,6 +69,9 @@ class Menu(object):
 
     def add_menu_item(self, item):
         self.menus.append(item)
+
+    def add_big_button(self, item):
+        self.big_button = item
 
     def button_pressed(self, button):
         if button == LCD.SELECT:
@@ -75,6 +91,8 @@ class Menu(object):
             self.exec_menu()
         elif button == LCD.LEFT:
             self.update_menu()
+        elif button == BIG_BUTTON and self.big_button:
+            self.big_button()
 
     def update_menu(self):
         item = self.menus[self.current]
@@ -94,10 +112,16 @@ class Menu(object):
             if self.lcd.is_pressed(button):
                 return button
 
+    def is_big_pressed(self):
+        if io.input(BIG_BUTTON):
+            return BIG_BUTTON
+
     def start(self):
         self.update_menu()
         activate = True
+        big_activate = True
         while True:
+            #TODO figure out why we need two separate button checks
             button = self.is_pressed()
             if button is not None:
                 if activate:
@@ -105,6 +129,14 @@ class Menu(object):
                 activate = False
             else:
                 activate = True
+
+            button = self.is_big_pressed()
+            if button is not None:
+                if big_activate:
+                    self.button_pressed(button)
+                big_activate = False
+            else:
+                big_activate = True
 
             self.exec_updates()
 
@@ -121,6 +153,7 @@ if __name__ == "__main__":
     menu = Menu(lcd)
     menu.add_menu_item(lights.light_on_menu())
     menu.add_menu_item(lights.light_off_menu())
+    menu.add_big_button(lights.toggle_light)
     menu.add_update_listener(lights.run_pending)
 
     menu.start()
