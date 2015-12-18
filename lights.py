@@ -9,29 +9,34 @@ buttons = (LCD.SELECT, LCD.LEFT, LCD.UP, LCD.DOWN, LCD.RIGHT)
 class MessageDisplay(object):
     def __init__(self, lcd):
         self.lcd = lcd
+        self.num = 0
 
     def message_1(self):
         def msg():
             self.lcd.clear()
-            self.lcd.message("exec 1")
+            self.lcd.message("exec 1 {}".format(self.num))
         return ("Message 1", msg)
 
     def message_2(self):
         def msg():
             self.lcd.clear()
-            self.lcd.message("exec 2")
+            self.lcd.message("exec 2 {}".format(self.num))
         return ("Message 2", msg)
 
     def message_3(self):
         def msg():
             self.lcd.clear()
-            self.lcd.message("exec 3")
+            self.lcd.message("exec 3 {}".format(self.num))
         return ("Message 3", msg)
+
+    def update(self):
+        self.num += 1
 
 class Menu(object):
     def __init__(self, lcd):
         self.current = 0
         self.menus = []
+        self.updates = []
         self.lcd = lcd
 
         self.backlight = True
@@ -48,7 +53,10 @@ class Menu(object):
         io.output(self.powertail_pin, self.powertail) 
         self.powertail = not self.powertail
 
-    def add_item(self, item):
+    def add_update_listener(self, item):
+        self.updates.append(item) 
+
+    def add_menu_item(self, item):
         self.menus.append(item)
 
     def button_pressed(self, button):
@@ -78,6 +86,10 @@ class Menu(object):
         item = self.menus[self.current]
         item[1]()
 
+    def exec_updates(self):
+        for update in self.updates:
+            update()
+
     def is_pressed(self):
         for button in buttons:
             if self.lcd.is_pressed(button):
@@ -95,6 +107,8 @@ class Menu(object):
             else:
                 activate = True
 
+            self.exec_updates()
+
             try:
                 time.sleep(0.1)  
             except KeyboardInterrupt:
@@ -106,8 +120,9 @@ if __name__ == "__main__":
     msg = MessageDisplay(lcd)
 
     menu = Menu(lcd)
-    menu.add_item(msg.message_1())
-    menu.add_item(msg.message_2())
-    menu.add_item(msg.message_3())
+    menu.add_menu_item(msg.message_1())
+    menu.add_menu_item(msg.message_2())
+    menu.add_menu_item(msg.message_3())
+    menu.add_update_listener(msg.update)
 
     menu.start()
