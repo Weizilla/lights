@@ -95,7 +95,11 @@ class Menu(object):
             else:
                 activate = True
 
-            time.sleep(0.1)  
+            try:
+                time.sleep(0.1)  
+            except KeyboardInterrupt:
+                print("Goodbye")
+                exit(0)
 
 if __name__ == "__main__":
     lcd = LCD.Adafruit_CharLCDPlate()
