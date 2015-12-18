@@ -40,12 +40,16 @@ class Menu(object):
         self.menus = []
         self.updates = []
         self.lcd = lcd
-
         self.backlight = True
+        self.clear_lcd()
+        self.update_backlight()
 
-    def toggle_backlight(self):
+    def clear_lcd(self):
+        self.lcd.clear()
+        self.lcd.set_color(1.0, 0.0, 0.0)
+
+    def update_backlight(self):
         self.lcd.set_backlight(self.backlight)
-        self.backlight = not self.backlight
 
     def add_update_listener(self, item):
         self.updates.append(item) 
@@ -55,7 +59,8 @@ class Menu(object):
 
     def button_pressed(self, button):
         if button == LCD.SELECT:
-            self.toggle_backlight()
+            self.backlight = not self.backlight
+            self.update_backlight()
         elif button == LCD.UP:
             self.current += 1
             if self.current == len(self.menus):
@@ -73,7 +78,7 @@ class Menu(object):
 
     def update_menu(self):
         item = self.menus[self.current]
-        lcd.clear()
+        self.clear_lcd()
         lcd.message(item[0])
 
     def exec_menu(self):
