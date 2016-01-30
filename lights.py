@@ -3,12 +3,12 @@ import time
 
 class Lights:
     def __init__(self):
-        self.light = True
+        self.light = False
         self._times = {}
 
     def toggle_light(self):
-        print("toggling light to {}".format(self.light))
         self.light = not self.light
+        print("toggling light to {}".format(self.light))
         self.update_state()
 
     def set_light(self, light):
