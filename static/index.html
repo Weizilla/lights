@@ -2,11 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="lib/angular/angular.min.js"></script>
-    <script src="js/app.js"></script>
     <title>Lights</title>
+    <link rel="stylesheet" href="lib/font-awesome-4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="app.css">
 </head>
 <body ng-app="lights-app" ng-controller="LightsController as ctrl">
-Hello {{ ctrl.lights }}
+
+<div class="container" ng-class="{true: 'on', false: 'off'}[ctrl.lights]">
+    <div class="lights">
+        <input class="toggle-btn" type="button" value="TOGGLE" ng-click="ctrl.toggle()">
+        <input class="onoff" type="button" value="ON" ng-click="ctrl.setLights(true)">
+        <input class="onoff" type="button" value="OFF" ng-click="ctrl.setLights(false)">
+    </div>
+    <div class="time">
+        <div class="time-on">
+            <label for="time-on">ON</label>
+            <input id="time-on" type="time">
+            <input type="button" value="Set">
+            <input type="button" value="Disable">
+        </div>
+        <div class="time-off">
+            <label for="time-off">OFF</label>
+            <input id="time-off" type="time">
+            <input type="button" value="Set">
+            <input type="button" value="Disable">
+        </div>
+    </div>
+</div>
+
+<script src="lib/angular/angular.min.js"></script>
+<script src="js/app.js"></script>
+
 </body>
 </html>

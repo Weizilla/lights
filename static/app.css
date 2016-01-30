@@ -1,0 +1,15 @@
+* {
+    box-sizing: border-box;
+}
+
+.toggle-btn {
+    width: 200px;
+}
+
+.on {
+    background: lightgreen;
+}
+
+.off {
+    background: lightcoral;
+}
