@@ -20,20 +20,26 @@ def toggle():
 @app.route("/api/lights/<light>")
 def set_lights(light):
     lights.set_light(light)
-    return light
+    return flask.jsonify({"light": light})
+
 
 @app.route("/api/lights")
 def get_lights():
-    return str(lights.get_light())
+    return flask.jsonify({"light": lights.get_light()})
 
 
-@app.route("/api/time/<mode>", methods=["GET", "PUT"])
+@app.route("/api/times")
+def get_times():
+    return flask.jsonify(lights.get_times())
+
+
+@app.route("/api/times/<mode>", methods=["GET", "PUT"])
 def set_time(mode):
     print("method: {} form {}".format(request.method, request.form))
     if request.method == "PUT":
         lights.set_time(mode, request.form["time"])
-    mode = lights.get_time(mode)
-    return mode or ""
+    time = lights.get_time(mode)
+    return flask.jsonify({mode: time}) or "{}"
 
 
 if __name__ == "__main__":
