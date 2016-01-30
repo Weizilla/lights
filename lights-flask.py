@@ -18,6 +18,7 @@ def index():
 @app.route("/api/toggle")
 def toggle():
     lights.toggle_light()
+    return get_lights()
 
 
 @app.route("/api/lights/<light>")
