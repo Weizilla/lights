@@ -24,10 +24,9 @@ def toggle():
 @app.route("/api/lights", methods=["GET", "PUT"])
 def lights():
     if request.method == "PUT":
-        lights.set_light(request.form["light"])
+        lights.set_light(request.form["light"] in ["true", 1, "True"])
     light = lights.get_light()
     return flask.jsonify({"light": light})
-
 
 @app.route("/api/times")
 def get_times():
