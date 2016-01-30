@@ -2,32 +2,25 @@
 
 import time
 import RPi.GPIO as io
-import schedule
+from lights import Lights
 
 io.setmode(io.BCM)
 BIG_BUTTON = 22
 POWERTAIL = 23
 
 
-class Lights():
+class LightsPi(Lights):
     def __init__(self):
-        self.light = True
+        super().__init__()
         io.setup(BIG_BUTTON, io.IN, pull_up_down=io.PUD_UP)
         io.setup(POWERTAIL, io.OUT)
 
-    def set_light(self, light):
-        self.light = light
-        self.update_powertail()
-
-    def toggle_light(self):
-        self.light = not self.light
-        self.update_powertail()
-
-    def update_powertail(self):
-        io.output(POWERTAIL, self.light)
+    def update_state(self):
+        io.output(POWERTAIL, self.get_light())
 
     def run_pending(self):
-        schedule.run_pending()
+        # schedule.run_pending()
+        pass
 
     def is_big_pressed(self):
         if io.input(BIG_BUTTON):
@@ -54,5 +47,5 @@ class Lights():
                 exit(0)
 
 if __name__ == "__main__":
-    lights = Lights()
+    lights = LightsPi()
     lights.start()
