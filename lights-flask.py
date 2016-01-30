@@ -17,19 +17,20 @@ def index():
 
 @app.route("/api/toggle")
 def toggle():
-    lights.toggle_light()
-    return get_lights()
+    light = lights.toggle_light()
+    return flask.jsonify({"light" : light})
 
 
 @app.route("/api/lights/<light>")
 def set_lights(light):
-    lights.set_light(light)
-    return flask.jsonify({"light": light})
+    light = lights.set_light(light)
+    return flask.jsonify({"light" : light})
 
 
 @app.route("/api/lights")
 def get_lights():
-    return flask.jsonify({"light": lights.get_light()})
+    light = lights.get_light()
+    return flask.jsonify({"light": light})
 
 
 @app.route("/api/times")
