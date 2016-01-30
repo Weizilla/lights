@@ -17,31 +17,21 @@ POWERTAIL = 23
 class LightsPi(Lights):
     def __init__(self):
         super().__init__()
+        self.bounce_start = None
         if io:
             io.setmode(io.BCM)
             io.setup(BIG_BUTTON, io.IN, pull_up_down=io.PUD_UP)
             io.setup(POWERTAIL, io.OUT, initial=0)
+            io.add_event_detect(BIG_BUTTON, io.BOTH, callback=self.btn_cb, bouncetime=500)
 
     def update_state(self):
         io.output(POWERTAIL, self.get_light())
-        pass
 
-    def run_pending(self):
-        # schedule.run_pending()
-        pass
+    def btn_cb(self, channel):
+        self.toggle_light()
 
     def start(self):
-        big_activate = False
         while True:
-            if io.input(BIG_BUTTON):
-                if big_activate:
-                    self.toggle_light()
-                big_activate = False
-            else:
-                big_activate = True
-
-            self.run_pending()
-
             try:
                 time.sleep(0.1)
             except KeyboardInterrupt:
@@ -55,3 +45,4 @@ class LightsPi(Lights):
 if __name__ == "__main__":
     lights = LightsPi()
     lights.start()
+    lights.stop()
