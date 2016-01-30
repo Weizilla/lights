@@ -1,10 +1,13 @@
+"""Web app for controlling lights through a Raspberry PI"""
+
 import flask
+import argparse
 from flask import Flask
 from flask import request
 from lights import Lights
+from lights_pi import LightsPi
 
 app = Flask(__name__, static_url_path="")
-lights = Lights()
 
 
 @app.route('/')
@@ -42,6 +45,18 @@ def set_time(mode):
     return flask.jsonify({mode: time}) or "{}"
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(__doc__)
+    parser.add_argument("--pi", action='store_true', help="Run with Raspberry PI lights controller")
+    parser.add_argument("--debug", action='store_true', help="Run with debug mode")
+    return parser.parse_args()
+
 if __name__ == "__main__":
-    app.debug = True
+    args = parse_args()
+    if (args.debug):
+        app.debug = True
+    if (args.pi):
+        lights = LightsPi()
+    else:
+        lights = Lights()
     app.run(host="0.0.0.0")

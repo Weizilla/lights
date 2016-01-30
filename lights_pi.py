@@ -1,10 +1,14 @@
 #!/usr/bin/python
 
 import time
-import RPi.GPIO as io
+import importlib
+rpi_spec = importlib.util.find_spec("RPi")
+if rpi_spec is not None:
+    import RPi.GPIO as io
+else:
+    io = None
 from lights import Lights
 
-io.setmode(io.BCM)
 BIG_BUTTON = 22
 POWERTAIL = 23
 
@@ -12,8 +16,10 @@ POWERTAIL = 23
 class LightsPi(Lights):
     def __init__(self):
         super().__init__()
-        io.setup(BIG_BUTTON, io.IN, pull_up_down=io.PUD_UP)
-        io.setup(POWERTAIL, io.OUT)
+        if io:
+            io.setmode(io.BCM)
+            io.setup(BIG_BUTTON, io.IN, pull_up_down=io.PUD_UP)
+            io.setup(POWERTAIL, io.OUT)
 
     def update_state(self):
         io.output(POWERTAIL, self.get_light())
