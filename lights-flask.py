@@ -18,17 +18,13 @@ def index():
 @app.route("/api/toggle")
 def toggle():
     light = lights.toggle_light()
-    return flask.jsonify({"light" : light})
+    return flask.jsonify({"light": light})
 
 
-@app.route("/api/lights/<light>")
-def set_lights(light):
-    light = lights.set_light(light)
-    return flask.jsonify({"light" : light})
-
-
-@app.route("/api/lights")
-def get_lights():
+@app.route("/api/lights", methods=["GET", "PUT"])
+def lights():
+    if request.method == "PUT":
+        lights.set_light(request.form["light"])
     light = lights.get_light()
     return flask.jsonify({"light": light})
 
@@ -58,6 +54,7 @@ def parse_args():
     parser.add_argument("--pi", action='store_true', help="Run with Raspberry PI lights controller")
     parser.add_argument("--debug", action='store_true', help="Run with debug mode")
     return parser.parse_args()
+
 
 if __name__ == "__main__":
     args = parse_args()
