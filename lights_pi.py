@@ -25,7 +25,11 @@ class LightsPi(Lights):
             io.add_event_detect(BIG_BUTTON, io.BOTH, callback=self.btn_cb, bouncetime=500)
 
     def update_state(self):
-        io.output(POWERTAIL, self.get_light())
+        if self.bounce_start is None or (time.time() - self.bounce_start > 1):
+            io.output(POWERTAIL, self.get_light())
+            self.bounce_start = time.time()
+            return True
+        return False
 
     def btn_cb(self, channel):
         self.toggle_light()
