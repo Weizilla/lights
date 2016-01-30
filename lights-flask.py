@@ -45,6 +45,12 @@ def set_time(mode):
     return flask.jsonify({mode: time}) or "{}"
 
 
+@app.route("/api/stop")
+def stop():
+    lights.stop()
+    return "{}"
+
+
 def parse_args():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument("--pi", action='store_true', help="Run with Raspberry PI lights controller")
