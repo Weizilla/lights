@@ -6,6 +6,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 250%;
+}
+.container {
+    width: 90%;
 }
 
 .container > * {
@@ -19,8 +23,8 @@ body {
 
 .button-toggle {
     background-color: dodgerblue;
-    font-size: 125%;
     width: 100%;
+    font-size: 300%;
 }
 
 .button-on {
@@ -46,7 +50,7 @@ body {
 }
 
 .time-label {
-    flex: 1 1 12%;
+    flex: 1 1 100px;
 }
 
 .time-container .pure-button {
