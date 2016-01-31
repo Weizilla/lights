@@ -1,5 +1,6 @@
 """Web app for controlling lights through a Raspberry PI"""
 
+import time
 import flask
 import argparse
 from flask import Flask
@@ -29,18 +30,14 @@ def lights():
     light = lights.get_light()
     return flask.jsonify({"light": light})
 
-@app.route("/api/times")
-def get_times():
-    return flask.jsonify(lights.get_times())
 
-
-@app.route("/api/times/<mode>", methods=["GET", "PUT"])
-def set_time(mode):
-    print("method: {} form {}".format(request.method, request.form))
+@app.route("/api/times", methods=["GET", "PUT"])
+def set_time():
     if request.method == "PUT":
-        lights.set_time(mode, request.get_json()["time"])
-    time = lights.get_time(mode)
-    return flask.jsonify({mode: time}) or "{}"
+        times = request.get_json()
+        for (k, v) in times.items():
+            lights.set_time(k, v)
+    return flask.jsonify(lights.get_times())
 
 
 @app.route("/api/stop")

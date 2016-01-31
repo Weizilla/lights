@@ -19,19 +19,20 @@
     <div class="time">
         <div class="time-container">
             <label class="time-label" for="time-on">ON</label>
-            <input class="time-input" id="time-on" type="time">
-            <button class="pure-button button-set"><i class="fa fa-check"></i></button>
-            <button class="pure-button button-disable"><i class="fa fa-times"></i></button>
+            <input class="time-input" id="time-on" type="time" ng-model="ctrl.times['on']">
+            <button class="pure-button button-set" ng-click="ctrl.setTime('on')"><i class="fa fa-check"></i></button>
+            <button class="pure-button button-disable" ng-click="ctrl.disableTime('off')"><i class="fa fa-times"></i></button>
         </div>
         <div class="time-container">
             <label class="time-label" for="time-off">OFF</label>
-            <input class="time-input" id="time-off" type="time">
-            <button class="pure-button button-set"><i class="fa fa-check"></i></button>
-            <button class="pure-button button-disable"><i class="fa fa-times"></i></button>
+            <input class="time-input" id="time-off" type="time" ng-model="ctrl.times['off']">
+            <button class="pure-button button-set" ng-click="ctrl.setTime('off')"><i class="fa fa-check"></i></button>
+            <button class="pure-button button-disable" ng-click="ctrl.disableTime('off')"><i class="fa fa-times"></i></button>
         </div>
     </div>
 </div>
 
+<script src="lib/moment-2.11.1/moment.min.js"></script>
 <script src="lib/angular/angular.min.js"></script>
 <script src="js/app.js"></script>
 

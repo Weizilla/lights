@@ -31,12 +31,12 @@ class Lights:
         print("setting state to {}".format(new_state))
         pass
 
-    def set_time(self, mode, light):
-        print("setting time for mode {}: {}".format(mode, light))
-        self._times[mode] = light
+    def set_time(self, mode, trigger_time):
+        print("setting time for mode {}: {}".format(mode, trigger_time))
+        self._times[mode] = time.strptime(trigger_time, "%H:%M")
 
     def get_times(self):
-        return self._times
+        return {k : time.strftime("%H:%M", v) for (k, v) in self._times.items()}
 
     def get_time(self, mode):
         light = self._times.get(mode)
