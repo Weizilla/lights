@@ -2,8 +2,55 @@
     box-sizing: border-box;
 }
 
-.toggle-btn {
-    width: 200px;
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container > * {
+    margin: 20px;
+}
+
+.lights {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.button-toggle {
+    background-color: dodgerblue;
+    font-size: 125%;
+    width: 100%;
+}
+
+.button-on {
+    background: rgb(28, 184, 65);
+    flex: 1 1 50%;
+}
+
+.button-off {
+    background: rgb(202, 60, 60);
+    flex: 1 1 50%;
+}
+
+.time-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0 0 0;
+}
+
+.time-container > * {
+    margin: 5px;
+    flex: 2 2 auto;
+}
+
+.time-label {
+    flex: 1 1 12%;
+}
+
+.time-container .pure-button {
+    font-size: 80%;
 }
 
 .on {

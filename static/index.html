@@ -4,28 +4,30 @@
     <meta charset="UTF-8">
     <title>Lights</title>
     <link rel="stylesheet" href="lib/font-awesome-4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="lib/pure-css-0.6/base-min.css">
+    <link rel="stylesheet" href="lib/pure-css-0.6/buttons-min.css">
     <link rel="stylesheet" href="app.css">
 </head>
 <body ng-app="lights-app" ng-controller="LightsController as ctrl">
 
 <div class="container" ng-class="{true: 'on', false: 'off'}[ctrl.lights]">
     <div class="lights">
-        <input class="toggle-btn" type="button" value="TOGGLE" ng-click="ctrl.toggle()">
-        <input class="onoff" type="button" value="ON" ng-click="ctrl.setLights(true)">
-        <input class="onoff" type="button" value="OFF" ng-click="ctrl.setLights(false)">
+        <button class="pure-button button-toggle" ng-click="ctrl.toggle()">TOGGLE</button>
+        <button class="pure-button button-on" ng-click="ctrl.setLights(true)">ON</button>
+        <button class="pure-button button-off" ng-click="ctrl.setLights(false)">OFF</button>
     </div>
     <div class="time">
-        <div class="time-on">
-            <label for="time-on">ON</label>
-            <input id="time-on" type="time">
-            <input type="button" value="Set">
-            <input type="button" value="Disable">
+        <div class="time-container">
+            <label class="time-label" for="time-on">ON</label>
+            <input class="time-input" id="time-on" type="time">
+            <button class="pure-button button-set"><i class="fa fa-check"></i></button>
+            <button class="pure-button button-disable"><i class="fa fa-times"></i></button>
         </div>
-        <div class="time-off">
-            <label for="time-off">OFF</label>
-            <input id="time-off" type="time">
-            <input type="button" value="Set">
-            <input type="button" value="Disable">
+        <div class="time-container">
+            <label class="time-label" for="time-off">OFF</label>
+            <input class="time-input" id="time-off" type="time">
+            <button class="pure-button button-set"><i class="fa fa-check"></i></button>
+            <button class="pure-button button-disable"><i class="fa fa-times"></i></button>
         </div>
     </div>
 </div>
