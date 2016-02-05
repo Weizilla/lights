@@ -2,13 +2,13 @@
 
 import time
 import importlib
+from lights import Lights
 rpi_spec = importlib.find_loader("RPi")
 #rpi_spec = importlib.util.find_spec("RPi")
 if rpi_spec is not None:
     import RPi.GPIO as io
 else:
     io = None
-from lights import Lights
 
 BIG_BUTTON = 22
 POWERTAIL = 23
@@ -16,19 +16,26 @@ POWERTAIL = 23
 
 class LightsPi(Lights):
     def __init__(self):
-        super().__init__()
-        self.bounce_start = None
+        super().__init__(state_callback=self.set_state)
+
         if io:
             io.setmode(io.BCM)
             io.setup(BIG_BUTTON, io.IN, pull_up_down=io.PUD_UP)
             io.setup(POWERTAIL, io.OUT, initial=0)
             io.add_event_detect(BIG_BUTTON, io.BOTH, callback=self.btn_cb, bouncetime=500)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.stop()
+
     def set_state(self, new_state):
-        io.output(POWERTAIL, new_state)
+        if io:
+            io.output(POWERTAIL, new_state)
 
     def btn_cb(self, channel):
-        self.toggle_light()
+        self.toggle()
 
     def start(self):
         while True:
@@ -36,13 +43,13 @@ class LightsPi(Lights):
                 time.sleep(0.1)
             except KeyboardInterrupt:
                 self.stop()
+                exit(1)
 
     def stop(self):
-        print("Goodbye")
-        io.cleanup()
-        exit(0)
+        if io:
+            io.cleanup()
+
 
 if __name__ == "__main__":
-    lights = LightsPi()
-    lights.start()
-    lights.stop()
+    with LightsPi() as lights:
+        lights.start()
