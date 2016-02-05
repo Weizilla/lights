@@ -1,5 +1,7 @@
 APScheduler==3.0.5
+coverage==4.0.3
 Flask==0.10.1
+freezegun==0.3.6
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
