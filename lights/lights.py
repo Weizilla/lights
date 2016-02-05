@@ -36,6 +36,7 @@ class Lights:
         job = self._scheduler.add_job(self._set_state, args=[state], trigger="cron", hour=hour,
                                       minute=minute, end_date=tomorrow_now)
         trigger = Trigger(job_id=job.id, state=state, hour=hour, minute=minute,
+                          next_run_time=job.next_run_time,
                           repeat_weekday=repeat_weekday,
                           repeat_weekend=repeat_weekend)
         self._triggers[job.id] = trigger
@@ -50,5 +51,5 @@ class Lights:
         return list(self._triggers.values())
 
 
-class Trigger(namedtuple("Trigger", "job_id state hour minute repeat_weekday repeat_weekend")):
+class Trigger(namedtuple("Trigger", "job_id state hour minute next_run_time repeat_weekday repeat_weekend")):
     pass

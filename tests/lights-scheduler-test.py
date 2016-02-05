@@ -50,6 +50,7 @@ class TestLightsScheduler(TestCase):
         assert_that(trigger.state, is_(state))
         assert_that(trigger.hour, is_(hour))
         assert_that(trigger.minute, is_(minute))
+        assert_that(trigger.next_run_time, is_(not_none()))
         assert_that(trigger.repeat_weekday, is_(False))
         assert_that(trigger.repeat_weekend, is_(False))
 
