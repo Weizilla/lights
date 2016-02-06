@@ -5,8 +5,9 @@ import flask
 import argparse
 from flask import Flask
 from flask import request
-from lights import Lights
-from lights_pi import LightsPi
+from lights.lights import Lights
+from lights.lights_pi import LightsPi
+import json
 
 app = Flask(__name__, static_url_path="")
 
@@ -18,20 +19,18 @@ def index():
 
 @app.route("/api/toggle")
 def toggle():
-    light = lights.toggle_light()
-    return flask.jsonify({"light": light})
+    lights.toggle()
+    return json.dumps({"state": lights.state})
 
 
-@app.route("/api/lights", methods=["GET", "PUT"])
-def lights():
+@app.route("/api/state", methods=["GET", "PUT"])
+def state():
     if request.method == "PUT":
-        new_state = request.get_json()["lights"] in ["true", 1, "True"]
-        lights.set_light(new_state)
-    light = lights.get_light()
-    return flask.jsonify({"light": light})
+        lights.state = request.get_json()["state"] in ["true", 1, "True"]
+    return json.dumps({"state": lights.state})
 
 
-@app.route("/api/times", methods=["GET", "PUT"])
+@app.route("/api/triggers", methods=["GET", "PUT"])
 def set_time():
     if request.method == "PUT":
         times = request.get_json()
