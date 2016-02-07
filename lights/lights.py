@@ -50,6 +50,9 @@ class Lights:
         self._triggers = active_triggers
         return list(self._triggers.values())
 
+    def stop(self):
+        pass
+
 
 class Trigger(namedtuple("Trigger", "job_id state hour minute next_run_time repeat_weekday repeat_weekend")):
     pass

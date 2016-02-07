@@ -31,12 +31,12 @@ def state():
 
 
 @app.route("/api/triggers", methods=["GET", "PUT"])
-def set_time():
+def triggers():
     if request.method == "PUT":
-        times = request.get_json()
-        for (k, v) in times.items():
-            lights.set_time(k, v)
-    return flask.jsonify(lights.get_times())
+        trigger = request.get_json()
+        lights.add_trigger(**trigger)
+    return json.dumps(lights.triggers)
+
 
 
 @app.route("/api/stop")
