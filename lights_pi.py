@@ -2,7 +2,7 @@
 
 import time
 import importlib
-from lights.lights import Lights
+from lights import Lights
 rpi_spec = importlib.find_loader("RPi")
 #rpi_spec = importlib.util.find_spec("RPi")
 if rpi_spec is not None:

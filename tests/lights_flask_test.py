@@ -1,8 +1,8 @@
 from unittest import TestCase
 from hamcrest import *
 from unittest.mock import Mock
-import lights.lights_flask as lights_flask
-from lights.lights import Trigger
+import lights_flask as lights_flask
+from lights import Trigger
 import json
 
 

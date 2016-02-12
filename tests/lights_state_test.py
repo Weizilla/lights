@@ -1,12 +1,12 @@
 from hamcrest import *
-from lights.lights import Lights
+from lights import Lights
 from freezegun import freeze_time
 from datetime import datetime, timedelta
 from unittest.mock import Mock
 from unittest import TestCase
 
 
-class TestLightsState(TestCase):
+class LightsStateTest(TestCase):
     def setUp(self):
         self.lights = Lights()
 

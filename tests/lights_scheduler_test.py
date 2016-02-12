@@ -1,10 +1,10 @@
 from hamcrest import *
 from unittest import TestCase
 from unittest.mock import Mock
-from lights.lights import Lights
+from lights import Lights
 
 
-class TestLightsScheduler(TestCase):
+class LightsSchedulerTest(TestCase):
 
     def setUp(self):
         self.lights = Lights()

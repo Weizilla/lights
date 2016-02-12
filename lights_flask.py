@@ -5,8 +5,8 @@ import flask
 import argparse
 from flask import Flask
 from flask import request
-from lights.lights import Lights
-from lights.lights_pi import LightsPi
+from lights import Lights
+from lights_pi import LightsPi
 import json
 
 app = Flask(__name__, static_url_path="")
