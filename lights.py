@@ -22,6 +22,8 @@ class Lights:
         if self._debounce is None or (time.time() - self._debounce > 1):
             if self._state_callback:
                 self._state_callback(value)
+            else:
+                print("State:", value)
             self._state = value
             self._debounce = time.time()
 

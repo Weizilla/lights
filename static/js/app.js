@@ -7,24 +7,24 @@ app.controller("LightsController", function($http) {
 
     self.toggle = function() {
         $http.get("/api/toggle").success(function(data) {
-            self.getLights();
+            self.updateState();
         });
     };
 
-    self.setLights = function(state) {
-        $http.put("/api/lights", {lights: state}).success(function(data) {
-            self.getLights();
+    self.setState = function(state) {
+        $http.put("/api/state", {state: state}).success(function(data) {
+            self.updateState();
         })
     };
 
-    self.getLights = function() {
-        $http.get("api/lights").success(function(data) {
-            self.lights = data["light"];
+    self.updateState = function() {
+        $http.get("api/state").success(function(data) {
+            self.lights = data["state"];
         });
     };
 
-    self.getTimes = function() {
-        $http.get("api/times").success(function(data) {
+    self.getTriggers = function() {
+        $http.get("api/triggers").success(function(data) {
             for (var m in data) {
                 var t = moment(data[m], "H:mm").toDate();
                 console.log(data[m]);
@@ -34,7 +34,7 @@ app.controller("LightsController", function($http) {
         });
     };
 
-    self.setTime = function(mode) {
+    self.setTrigger = function(mode) {
         if (mode in self.times && self.times[mode]) {
             var data = {};
             data[mode] = moment(self.times[mode]).format("H:mm");
@@ -44,8 +44,8 @@ app.controller("LightsController", function($http) {
         }
     };
 
-    self.getLights();
-    self.getTimes();
+    self.updateState();
+    self.getTriggers();
 
     return self;
 });
