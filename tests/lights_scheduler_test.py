@@ -2,7 +2,8 @@ from hamcrest import *
 from unittest import TestCase
 from unittest.mock import Mock
 from lights import Lights
-
+from datetime import datetime
+from time import time
 
 class LightsSchedulerTest(TestCase):
 
@@ -39,6 +40,7 @@ class LightsSchedulerTest(TestCase):
         state = True
         hour = 10
         minute = 20
+        now = int(time())
         self.lights.add_trigger(state, hour, minute)
 
         job_id = self.lights._scheduler.get_jobs()[0].id
@@ -50,7 +52,7 @@ class LightsSchedulerTest(TestCase):
         assert_that(trigger.state, is_(state))
         assert_that(trigger.hour, is_(hour))
         assert_that(trigger.minute, is_(minute))
-        assert_that(trigger.next_run_time, is_(not_none()))
+        assert_that(trigger.next_run_time, is_(greater_than(now)))
         assert_that(trigger.repeat_weekday, is_(False))
         assert_that(trigger.repeat_weekend, is_(False))
 
