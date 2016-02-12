@@ -19,16 +19,44 @@
     <div class="time">
         <div class="time-container">
             <label class="time-label">Add</label>
-            <button class="pure-button">ON</button>
-            <input class="time-input" id="time-on" type="time" ng-model="ctrl.times['on']">
+            <button class="pure-button"
+                    ng-model="ctrl.newTrigger.state"
+                    ng-click="ctrl.newTrigger.toggleState()"
+                    >{{ ctrl.newTrigger.stateName() }}</button>
+            <input class="time-input" id="time-on" type="time" ng-model="ctrl.newTrigger.time">
             <div class="repeat-container">
-                <button class="pure-button button-repeat">Repeat Weekday</button>
-                <button class="pure-button button-repeat">Repeat Weekday</button>
+                <button class="pure-button button-repeat"
+                        ng-class="{true: 'on', false: 'off'}[ctrl.newTrigger.repeatWeekday]"
+                        ng-click="ctrl.newTrigger.toggleRepeatWeekday()"
+                    >Repeat M-F</button>
+                <button class="pure-button button-repeat"
+                        ng-class="{true: 'on', false: 'off'}[ctrl.newTrigger.repeatWeekend]"
+                        ng-click="ctrl.newTrigger.toggleRepeatWeekend()"
+                >Repeat S-S</button>
             </div>
-            <button class="pure-button button-add" ng-click="ctrl.setTime('on')"><i class="fa fa-check"></i></button>
+            <button class="pure-button button-add" ng-click="ctrl.addTrigger()"><i class="fa fa-check"></i></button>
         </div>
     </div>
+    <table class="triggers">
+        <thead>
+        <tr>
+            <th>State</th>
+            <th>Time</th>
+            <th>Next</th>
+            <th>Repeat M-F</th>
+            <th>Repeat S-S</th>
+        </tr>
+        </thead>
+        <tr class="trigger" ng-repeat="trigger in ctrl.triggers">
+            <td>{{ trigger.state }}</td>
+            <td>{{ trigger.time }}</td>
+            <td>{{ trigger.next_run_time }}</td>
+            <td>{{ trigger.repeat_weekday }}</td>
+            <td>{{ trigger.repeat_weekend }}</td>
+        </tr>
+    </table>
 </div>
+
 
 <script src="lib/moment-2.11.2/moment.min.js"></script>
 <script src="lib/angular-1.5.0/angular.min.js"></script>

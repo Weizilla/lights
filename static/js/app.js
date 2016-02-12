@@ -3,7 +3,47 @@ app = angular.module("lights-app", []);
 app.controller("LightsController", function($http) {
     var self = this;
     self.lights = "LIGHTS";
-    self.times = {};
+    self.triggers = [
+        {
+            "job_id": 1,
+            state: true,
+            time: "10:20",
+            next_run_time: moment(1455319205*1000).format("dd MMM D h:mm a"),
+            repeat_weekday: true,
+            repeat_weekend: false
+        },
+        {
+            "job_id": 2,
+            state: true,
+            time: "10:20",
+            next_run_time: 1455319205,
+            repeat_weekday: false,
+            repeat_weekend: true
+        },
+        {"job_id": 3,
+        state: true,
+            time: "10:20",
+        next_run_time: 1455319205,
+        repeat_weekday: true,
+        repeat_weekend: false}
+    ];
+    self.newTrigger = {
+        state: false,
+        repeatWeekday: false,
+        repeatWeekend: false,
+        stateName: function() {
+            return this.state ? "ON" : "OFF";
+        },
+        toggleState: function() {
+            this.state = ! this.state;
+        },
+        toggleRepeatWeekday: function() {
+            this.repeatWeekday = ! this.repeatWeekday;
+        },
+        toggleRepeatWeekend: function() {
+            this.repeatWeekend = ! this.repeatWeekend;
+        }
+    };
 
     self.toggle = function() {
         $http.get("/api/toggle").success(function(data) {
@@ -25,12 +65,7 @@ app.controller("LightsController", function($http) {
 
     self.getTriggers = function() {
         $http.get("api/triggers").success(function(data) {
-            for (var m in data) {
-                var t = moment(data[m], "H:mm").toDate();
-                console.log(data[m]);
-                console.log(t);
-                self.times[m] = t;
-            }
+            //self.triggers = data;
         });
     };
 
