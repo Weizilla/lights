@@ -41,6 +41,7 @@ class Lights:
                           next_run_time=int(job.next_run_time.timestamp()),
                           repeat_weekday=repeat_weekday,
                           repeat_weekend=repeat_weekend)
+        print("Added trigger", trigger)
         self._triggers[job.id] = trigger
 
     @property

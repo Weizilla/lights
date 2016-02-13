@@ -35,8 +35,7 @@ def triggers():
     if request.method == "PUT":
         trigger = request.get_json()
         lights.add_trigger(**trigger)
-    return json.dumps(lights.triggers)
-
+    return json.dumps([t._asdict() for t in lights.triggers])
 
 
 @app.route("/api/stop")

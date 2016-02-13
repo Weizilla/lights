@@ -47,8 +47,14 @@ class FlaskTest(TestCase):
         results = json.loads(self.lights_flask.triggers())
         assert_that(len(results), is_(1))
 
-        trigger = results[0]
-        assert_that(trigger, is_(trigger))
+        actual = results[0]
+        assert_that(actual["job_id"], is_(trigger.job_id))
+        assert_that(actual["state"], is_(trigger.state))
+        assert_that(actual["hour"], is_(trigger.hour))
+        assert_that(actual["minute"], is_(trigger.minute))
+        assert_that(actual["next_run_time"], is_(trigger.next_run_time))
+        assert_that(actual["repeat_weekday"], is_(trigger.repeat_weekday))
+        assert_that(actual["repeat_weekend"], is_(trigger.repeat_weekend))
 
     def test_set_trigger(self):
         state = True
