@@ -3,36 +3,11 @@ app = angular.module("lights-app", []);
 app.controller("LightsController", function($http) {
     var self = this;
     self.lights = "LIGHTS";
-    self.triggers = [
-        {
-            "job_id": 1,
-            state: true,
-            time: "10:20",
-            next_run_time: moment(1455319205*1000).format("dd MMM D h:mm a"),
-            repeat_weekday: true,
-            repeat_weekend: false
-        },
-        {
-            "job_id": 2,
-            state: true,
-            time: "10:20",
-            next_run_time: 1455319205,
-            repeat_weekday: false,
-            repeat_weekend: true
-        },
-        {"job_id": 3,
-        state: true,
-            time: "10:20",
-        next_run_time: 1455319205,
-        repeat_weekday: true,
-        repeat_weekend: false}
-    ];
+    self.triggers = [];
     self.newTrigger = {
         state: true,
-        hour: 10,
-        minute: 20,
-        repeat_weekday: true,
-        repeat_weekend: false,
+        repeatWeekday: false,
+        repeatWeekend: false,
         stateName: function() {
             return this.state ? "ON" : "OFF";
         },
@@ -44,6 +19,15 @@ app.controller("LightsController", function($http) {
         },
         toggleRepeatWeekend: function() {
             this.repeatWeekend = ! this.repeatWeekend;
+        },
+        asData: function() {
+            return {
+                state: this.state,
+                hour: moment(this.time).hour(),
+                minute: moment(this.time).minute(),
+                repeat_weekday: this.repeatWeekday,
+                repeat_weekend: this.repeatWeekend,
+            }
         }
     };
 
@@ -67,18 +51,25 @@ app.controller("LightsController", function($http) {
 
     self.updateTriggers = function() {
         $http.get("api/triggers").success(function(data) {
-            self.triggers = data;
+            self.triggers = data.map(function(data) {
+                data.time = moment({hour: data.hour, minute: data.minute}).format("h:mm a");
+                data.next_run_time = moment(data.next_run_time * 1000).toDate();
+                return data
+            });
+            self.triggers.sort(function(a, b) {
+                return a.next_run_time - b.next_run_time;
+            })
         });
     };
 
     self.addTrigger = function() {
-        $http.put("api/triggers", self.newTrigger).success(function(data) {
+        $http.put("api/triggers", self.newTrigger.asData()).success(function(data) {
             self.updateTriggers();
         });
     };
 
     self.updateState();
-    //self.updateTriggers();
+    self.updateTriggers();
 
     return self;
 });

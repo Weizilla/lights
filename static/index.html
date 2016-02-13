@@ -10,7 +10,8 @@
 </head>
 <body ng-app="lights-app" ng-controller="LightsController as ctrl">
 
-<div class="container" ng-class="{true: 'on', false: 'off'}[ctrl.lights]">
+<!--<div class="container" ng-class="{true: 'on', false: 'off'}[ctrl.lights]">-->
+<div class="container">
     <div class="lights">
         <button class="pure-button button-blue button-toggle" ng-click="ctrl.toggle()">TOGGLE</button>
         <button class="pure-button button-on" ng-click="ctrl.setState(true)">ON</button>
@@ -26,11 +27,11 @@
             <input class="time-input" id="time-on" type="time" ng-model="ctrl.newTrigger.time">
             <div class="repeat-container">
                 <button class="pure-button button-repeat"
-                        ng-class="{true: 'on', false: 'off'}[ctrl.newTrigger.repeat_weekday]"
+                        ng-class="{true: 'on', false: 'off'}[ctrl.newTrigger.repeatWeekday]"
                         ng-click="ctrl.newTrigger.toggleRepeatWeekday()"
                     >Repeat M-F</button>
                 <button class="pure-button button-repeat"
-                        ng-class="{true: 'on', false: 'off'}[ctrl.newTrigger.repeat_weekend]"
+                        ng-class="{true: 'on', false: 'off'}[ctrl.newTrigger.repeatWeekend]"
                         ng-click="ctrl.newTrigger.toggleRepeatWeekend()"
                 >Repeat S-S</button>
             </div>
@@ -48,9 +49,9 @@
         </tr>
         </thead>
         <tr class="trigger" ng-repeat="trigger in ctrl.triggers">
+            <td>{{ trigger.next_run_time | date: 'EEE MMM d h:mm a' }}</td>
             <td>{{ trigger.state }}</td>
             <td>{{ trigger.time }}</td>
-            <td>{{ trigger.next_run_time }}</td>
             <td>{{ trigger.repeat_weekday }}</td>
             <td>{{ trigger.repeat_weekend }}</td>
         </tr>
