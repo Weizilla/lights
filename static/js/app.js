@@ -28,9 +28,11 @@ app.controller("LightsController", function($http) {
         repeat_weekend: false}
     ];
     self.newTrigger = {
-        state: false,
-        repeatWeekday: false,
-        repeatWeekend: false,
+        state: true,
+        hour: 10,
+        minute: 20,
+        repeat_weekday: true,
+        repeat_weekend: false,
         stateName: function() {
             return this.state ? "ON" : "OFF";
         },
@@ -63,24 +65,20 @@ app.controller("LightsController", function($http) {
         });
     };
 
-    self.getTriggers = function() {
+    self.updateTriggers = function() {
         $http.get("api/triggers").success(function(data) {
-            //self.triggers = data;
+            self.triggers = data;
         });
     };
 
-    self.setTrigger = function(mode) {
-        if (mode in self.times && self.times[mode]) {
-            var data = {};
-            data[mode] = moment(self.times[mode]).format("H:mm");
-            $http.put("api/times", data).success(function(data) {
-                self.getTimes();
-            });
-        }
+    self.addTrigger = function() {
+        $http.put("api/triggers", self.newTrigger).success(function(data) {
+            self.updateTriggers();
+        });
     };
 
     self.updateState();
-    self.getTriggers();
+    //self.updateTriggers();
 
     return self;
 });

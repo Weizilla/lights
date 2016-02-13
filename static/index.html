@@ -26,11 +26,11 @@
             <input class="time-input" id="time-on" type="time" ng-model="ctrl.newTrigger.time">
             <div class="repeat-container">
                 <button class="pure-button button-repeat"
-                        ng-class="{true: 'on', false: 'off'}[ctrl.newTrigger.repeatWeekday]"
+                        ng-class="{true: 'on', false: 'off'}[ctrl.newTrigger.repeat_weekday]"
                         ng-click="ctrl.newTrigger.toggleRepeatWeekday()"
                     >Repeat M-F</button>
                 <button class="pure-button button-repeat"
-                        ng-class="{true: 'on', false: 'off'}[ctrl.newTrigger.repeatWeekend]"
+                        ng-class="{true: 'on', false: 'off'}[ctrl.newTrigger.repeat_weekend]"
                         ng-click="ctrl.newTrigger.toggleRepeatWeekend()"
                 >Repeat S-S</button>
             </div>
