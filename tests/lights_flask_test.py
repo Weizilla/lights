@@ -48,6 +48,7 @@ class FlaskTest(TestCase):
         assert_that(len(results), is_(1))
 
         actual = results[0]
+        print(actual)
         assert_that(actual["job_id"], is_(trigger.job_id))
         assert_that(actual["state"], is_(trigger.state))
         assert_that(actual["hour"], is_(trigger.hour))
