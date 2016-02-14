@@ -35,6 +35,7 @@ def triggers():
     if request.method == "PUT":
         trigger = request.get_json()
         lights.add_trigger(**trigger)
+    print("flask triggers", lights.triggers)
     return json.dumps([t._asdict() for t in lights.triggers])
 
 
