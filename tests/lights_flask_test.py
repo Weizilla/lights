@@ -47,6 +47,7 @@ class FlaskTest(TestCase):
         results = json.loads(self.lights_flask.triggers())
         assert_that(len(results), is_(1))
 
+        print(results)
         actual = results[0]
         print(actual)
         assert_that(actual["job_id"], is_(trigger.job_id))
