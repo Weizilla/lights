@@ -57,5 +57,4 @@ class Lights:
         pass
 
 
-class Trigger(namedtuple("Trigger", "job_id state hour minute next_run_time repeat_weekday repeat_weekend")):
-    pass
+Trigger = namedtuple("Trigger", "job_id state hour minute next_run_time repeat_weekday repeat_weekend")
