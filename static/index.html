@@ -52,8 +52,8 @@
             <td>{{ trigger.next_run_time | date: 'EEE MMM d h:mm a' }}</td>
             <td>{{ trigger.state }}</td>
             <td>{{ trigger.time }}</td>
-            <td>{{ trigger.repeat_weekday }}</td>
-            <td>{{ trigger.repeat_weekend }}</td>
+            <td>{{ trigger.repeatWeekday }}</td>
+            <td>{{ trigger.repeatWeekend }}</td>
         </tr>
     </table>
 </div>
@@ -62,6 +62,7 @@
 <script src="lib/moment-2.11.2/moment.min.js"></script>
 <script src="lib/angular-1.5.0/angular.min.js"></script>
 <script src="js/app.js"></script>
+<script src="js/trigger.js"></script>
 
 </body>
 </html>
