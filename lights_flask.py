@@ -37,7 +37,7 @@ def triggers():
         lights.add_trigger(**trigger)
     print("flask triggers", lights.triggers)
     print("len", len(lights.triggers))
-    if len(lights.triggers) > 1:
+    if len(lights.triggers) > 0:
         print("trigger as dictionary", lights.triggers[0]._asdict())
         print("json trigger dict", json.dumps(lights.triggers[0]._asdict()))
     triggers_json = json.dumps([t._asdict() for t in lights.triggers])
