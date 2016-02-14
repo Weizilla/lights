@@ -41,7 +41,6 @@ class Lights:
                           next_run_time=int(job.next_run_time.timestamp()),
                           repeat_weekday=repeat_weekday,
                           repeat_weekend=repeat_weekend)
-        print("Added trigger", trigger)
         self._triggers[job.id] = trigger
 
     @property
@@ -55,6 +54,5 @@ class Lights:
 
     def stop(self):
         pass
-
 
 Trigger = namedtuple("Trigger", "job_id state hour minute next_run_time repeat_weekday repeat_weekend")
