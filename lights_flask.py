@@ -36,7 +36,9 @@ def triggers():
         trigger = request.get_json()
         lights.add_trigger(**trigger)
     print("flask triggers", lights.triggers)
-    return json.dumps([t._asdict() for t in lights.triggers])
+    triggers_json = json.dumps([t._asdict() for t in lights.triggers])
+    print("triggers json", triggers_json)
+    return triggers_json
 
 
 @app.route("/api/stop")
