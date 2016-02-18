@@ -23,15 +23,15 @@
             <button class="pure-button"
                     ng-model="ctrl.newTrigger.state"
                     ng-click="ctrl.newTrigger.toggleState()">
-                <i class="fa" ng-class="{true: 'fa-sun-o', false: 'fa-moon-o'}[ctrl.newTrigger.state]"></i>
+                <i class="fa" ng-class="ctrl.newTrigger.state ? 'fa-sun-o' : 'fa-moon-o'"></i>
                 {{ ctrl.newTrigger.stateName() }}</button>
             <input class="time-input" id="time-on" type="time" ng-model="ctrl.newTrigger.time">
             <div class="repeat-container">
                 <button class="pure-button button-repeat" ng-click="ctrl.newTrigger.toggleRepeatWeekday()">
-                    <i class="fa" ng-class="{true: 'fa-check-square-o', false: 'fa-square-o'}[ctrl.newTrigger.repeatWeekday]"></i>
+                    <i class="fa" ng-class="ctrl.newTrigger.repeatWeekday ? 'fa-check-square-o' : 'fa-square-o'"></i>
                     <i class="fa fa-repeat"></i> M-F</button>
                 <button class="pure-button button-repeat" ng-click="ctrl.newTrigger.toggleRepeatWeekend()">
-                    <i class="fa" ng-class="{true: 'fa-check-square-o', false: 'fa-square-o'}[ctrl.newTrigger.repeatWeekend]"></i>
+                    <i class="fa" ng-class="ctrl.newTrigger.repeatWeekend ? 'fa-check-square-o' : 'fa-square-o'"></i>
                     <i class="fa fa-repeat"></i> S-S</button>
             </div>
             <button class="pure-button button-add"
@@ -50,13 +50,10 @@
         </thead>
         <tr class="trigger" ng-repeat="trigger in ctrl.triggers">
             <td>{{ trigger.nextRunTime | date: 'EEE MMM d h:mm a' }}</td>
-            <td><i class="fa"
-                    ng-class="{true: 'fa-sun-o', false: 'fa-moon-o'}[trigger.state]"></i></td>
+            <td><i class="fa" ng-class="trigger.state ? 'fa-sun-o' : 'fa-moon-o'"></i></td>
             <td>{{ trigger.time }}</td>
-            <td><i class="fa"
-                    ng-class="{true: 'fa-circle', false: 'fa-circle-o'}[trigger.repeatWeekday]"></i></td>
-            <td><i class="fa"
-                    ng-class="{true: 'fa-circle', false: 'fa-circle-o'}[trigger.repeatWeekend]"></i></td>
+            <td><i class="fa" ng-class="trigger.repeatWeekday ? 'fa-circle' : 'fa-circle-o'"></i></td>
+            <td><i class="fa" ng-class="trigger.repeatWeekend ? 'fa-circle' : 'fa-circle-o'"></i></td>
             <td><button class="pure-button button-delete"
                     ng-click="ctrl.removeTrigger(trigger.jobId)">
                 <i class="fa fa-times"></i>
