@@ -1,7 +1,7 @@
 from hamcrest import *
 from unittest import TestCase
-from unittest.mock import Mock
-
+from unittest.mock import Mock, ANY
+from apscheduler.schedulers.background import BackgroundScheduler
 from lights import Lights
 from time import time
 
@@ -16,6 +16,58 @@ class LightsSchedulerTest(TestCase):
 
         Lights(scheduler=mock)
         mock.start.assert_called_with()
+
+    def test_add_trigger_to_scheduler(self):
+        scheduler = Mock(wraps=BackgroundScheduler())
+        lights = Lights(scheduler=scheduler)
+
+        state = True
+        hour = 10
+        minute = 20
+        lights.add_trigger(state, hour, minute)
+
+        scheduler.add_job.assert_called_with(func=ANY, args=[state], end_date=ANY, trigger="cron",
+             hour=hour, minute=minute, day_of_week=None)
+
+    def test_add_trigger_to_scheduler_weekday(self):
+        scheduler = Mock(wraps=BackgroundScheduler())
+        lights = Lights(scheduler=scheduler)
+
+        state = True
+        hour = 10
+        minute = 20
+        repeat_weekday = True
+        lights.add_trigger(state, hour, minute, repeat_weekday=repeat_weekday)
+
+        scheduler.add_job.assert_called_with(func=ANY, args=[state], end_date=None, trigger="cron",
+            hour=hour, minute=minute, day_of_week=Lights.weekdays)
+
+    def test_add_trigger_to_scheduler_weekend(self):
+        scheduler = Mock(wraps=BackgroundScheduler())
+        lights = Lights(scheduler=scheduler)
+
+        state = True
+        hour = 10
+        minute = 20
+        repeat_weekend = True
+        lights.add_trigger(state, hour, minute, repeat_weekend=repeat_weekend)
+
+        scheduler.add_job.assert_called_with(func=ANY, args=[state], end_date=None, trigger="cron",
+             hour=hour, minute=minute, day_of_week=Lights.weekends)
+
+    def test_add_trigger_to_scheduler_all_week(self):
+        scheduler = Mock(wraps=BackgroundScheduler())
+        lights = Lights(scheduler=scheduler)
+
+        state = True
+        hour = 10
+        minute = 20
+        repeat_weekday = True
+        repeat_weekend = True
+        lights.add_trigger(state, hour, minute, repeat_weekday, repeat_weekend)
+
+        scheduler.add_job.assert_called_with(func=ANY, args=[state], end_date=None, trigger="cron",
+             hour=hour, minute=minute, day_of_week=Lights.weekdays + ","  + Lights.weekends)
 
     def test_add_trigger_and_get_job(self):
         state = True

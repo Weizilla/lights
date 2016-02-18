@@ -5,6 +5,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 
 class Lights:
+    weekdays = "mon,tue,wed,thu,fri"
+    weekends = "sat,sun"
+    all_week = weekdays + "," + weekends
+
     def __init__(self, state_callback=None, scheduler=None):
         self._state = False
         self._debounce = None
@@ -34,14 +38,34 @@ class Lights:
         self.state = state
 
     def add_trigger(self, state, hour, minute, repeat_weekday=False, repeat_weekend=False):
-        tomorrow_now = datetime.now() + timedelta(days=1)
-        job = self._scheduler.add_job(self._set_state, args=[state], trigger="cron", hour=hour,
-                                      minute=minute, end_date=tomorrow_now)
+        end_date = self._calc_end_date(repeat_weekday, repeat_weekend)
+        day_of_week = self._calc_day_of_week(repeat_weekday, repeat_weekend)
+        
+        job = self._scheduler.add_job(func=self._set_state, args=[state], trigger="cron", hour=hour,
+                                      minute=minute, end_date=end_date, day_of_week=day_of_week)
+
         trigger = Trigger(job_id=job.id, state=state, hour=hour, minute=minute,
                           next_run_time=int(job.next_run_time.timestamp()),
                           repeat_weekday=repeat_weekday,
                           repeat_weekend=repeat_weekend)
+
         self._triggers[job.id] = trigger
+
+    @staticmethod
+    def _calc_end_date(repeat_weekday, repeat_weekend):
+        tomorrow = datetime.now() + timedelta(days=1)
+        return None if repeat_weekday or repeat_weekend else tomorrow
+
+    @staticmethod
+    def _calc_day_of_week(repeat_weekday, repeat_weekend):
+        if repeat_weekday and repeat_weekend:
+            return Lights.all_week
+        elif repeat_weekday:
+            return Lights.weekdays
+        elif repeat_weekend:
+            return Lights.weekends
+        else:
+            return None
 
     def remove_trigger(self, job_id):
         del self._triggers[job_id]
