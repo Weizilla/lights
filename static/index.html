@@ -49,11 +49,15 @@
         </tr>
         </thead>
         <tr class="trigger" ng-repeat="trigger in ctrl.triggers">
-            <td>{{ trigger.next_run_time | date: 'EEE MMM d h:mm a' }}</td>
+            <td>{{ trigger.nextRunTime | date: 'EEE MMM d h:mm a' }}</td>
             <td>{{ trigger.state }}</td>
             <td>{{ trigger.time }}</td>
             <td>{{ trigger.repeatWeekday }}</td>
             <td>{{ trigger.repeatWeekend }}</td>
+            <td><button class="pure-button button-delete"
+                    ng-click="ctrl.removeTrigger(trigger.jobId)">
+                <i class="fa fa-times"></i>
+            </button></td>
         </tr>
     </table>
 </div>

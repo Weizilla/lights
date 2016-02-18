@@ -43,6 +43,10 @@ class Lights:
                           repeat_weekend=repeat_weekend)
         self._triggers[job.id] = trigger
 
+    def remove_trigger(self, job_id):
+        del self._triggers[job_id]
+        self._scheduler.remove_job(job_id)
+
     @property
     def triggers(self):
         active_triggers = {}
@@ -54,5 +58,7 @@ class Lights:
 
     def stop(self):
         pass
+
+
 
 Trigger = namedtuple("Trigger", "job_id state hour minute next_run_time repeat_weekday repeat_weekend")

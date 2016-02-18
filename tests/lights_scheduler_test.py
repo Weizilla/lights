@@ -1,9 +1,10 @@
 from hamcrest import *
 from unittest import TestCase
 from unittest.mock import Mock
+
 from lights import Lights
-from datetime import datetime
 from time import time
+
 
 class LightsSchedulerTest(TestCase):
 
@@ -23,7 +24,7 @@ class LightsSchedulerTest(TestCase):
         self.lights.add_trigger(state, hour, minute)
 
         jobs = self.lights._scheduler.get_jobs()
-        assert_that(len(jobs), is_(1))
+        assert_that(jobs, has_length(1))
 
     def test_add_triggers_and_get_jobs(self):
         num = 5
@@ -31,10 +32,10 @@ class LightsSchedulerTest(TestCase):
             self.lights.add_trigger(True, 10, 20)
 
         jobs = self.lights._scheduler.get_jobs()
-        assert_that(len(jobs), is_(num))
+        assert_that(jobs, has_length(num))
 
         triggers = self.lights.triggers
-        assert_that(len(triggers), is_(num))
+        assert_that(triggers, has_length(num))
 
     def test_add_and_get_trigger(self):
         state = True
@@ -45,7 +46,7 @@ class LightsSchedulerTest(TestCase):
 
         job_id = self.lights._scheduler.get_jobs()[0].id
         triggers = self.lights.triggers
-        assert_that(len(triggers), is_(1))
+        assert_that(triggers, has_length(1))
 
         trigger = triggers[0]
         assert_that(trigger.job_id, is_(job_id))
@@ -72,10 +73,35 @@ class LightsSchedulerTest(TestCase):
 
         self.lights._scheduler.remove_job(removed_job_id)
         jobs = self.lights._scheduler.get_jobs()
-        assert_that(len(jobs), is_(1))
+        assert_that(jobs, has_length(1))
 
         triggers = self.lights.triggers
-        assert_that(len(triggers), is_(1))
+        assert_that(triggers, has_length(1))
 
         trigger = triggers[0]
         assert_that(trigger.job_id, is_(keep_job_id))
+
+    def test_delete_trigger_from_triggers(self):
+        self.lights.add_trigger(True, 10, 20)
+
+        jobs = self.lights._scheduler.get_jobs()
+        job_id = jobs[0].id
+        triggers = self.lights.triggers
+        assert_that(triggers, has_length(1))
+
+        self.lights.remove_trigger(job_id)
+
+        triggers = self.lights.triggers
+        assert_that(triggers, is_(empty()))
+
+    def test_delete_job_from_scheduler(self):
+        self.lights.add_trigger(True, 10, 20)
+
+        jobs = self.lights._scheduler.get_jobs()
+        job_id = jobs[0].id
+        assert_that(jobs, has_length(1))
+
+        self.lights.remove_trigger(job_id)
+
+        jobs = self.lights._scheduler.get_jobs()
+        assert_that(jobs, is_(empty()))

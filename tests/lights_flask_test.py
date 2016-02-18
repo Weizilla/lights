@@ -78,6 +78,13 @@ class FlaskTest(TestCase):
                 hour=hour, minute=minute, repeat_weekends=repeat_weekends,
                 repeat_weekdays=repeat_weekdays)
 
+    def test_remove_trigger(self):
+        job_id = 10
+        self.lights_flask.remove_trigger(job_id)
+
+        self.lights_flask.lights.remove_trigger.assert_called_with(job_id)
+
+
 class FakeRequest:
     def __init__(self, method, json=None):
         self.method = method

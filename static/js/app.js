@@ -42,6 +42,12 @@ app.controller("LightsController", function($http) {
         });
     };
 
+    self.removeTrigger = function(jobId) {
+        $http.delete("api/triggers/" + jobId).success(function(data) {
+            self.updateTriggers();
+        });
+    };
+
     self.updateState();
     self.updateTriggers();
 

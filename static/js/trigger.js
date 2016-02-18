@@ -3,11 +3,12 @@ function Trigger(input) {
     this.repeatWeekday = false;
     this.repeatWeekend = false;
     if (input !== undefined) {
+        this.jobId = input.job_id;
         this.state = input.state;
         this.repeatWeekday = input.repeat_weekday;
         this.repeatWeekend = input.repeat_weekend;
         this.time = moment({hour: input.hour, minute: input.minute}).format("h:mm a");
-        this.next_run_time = moment(input.next_run_time * 1000).toDate();
+        this.nextRunTime = moment(input.next_run_time * 1000).toDate();
     }
     this.stateName = function() {
         return this.state ? "ON" : "OFF";

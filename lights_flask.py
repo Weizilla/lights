@@ -38,6 +38,12 @@ def triggers():
     return json.dumps([t._asdict() for t in lights.triggers])
 
 
+@app.route("/api/triggers/<job_id>", methods=["DELETE"])
+def remove_trigger(job_id):
+    lights.remove_trigger(job_id)
+    return triggers()
+
+
 @app.route("/api/stop")
 def stop():
     lights.stop()
