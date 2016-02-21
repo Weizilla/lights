@@ -1,5 +1,4 @@
 import time
-from collections import namedtuple
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -16,6 +15,11 @@ class Lights:
         self._scheduler = scheduler or BackgroundScheduler()
         self._scheduler.start()
         self._triggers = {}
+        self.logger = None
+
+    def log(self, message):
+        if self.logger:
+            self.logger.info(message)
 
     @property
     def state(self):
@@ -27,7 +31,7 @@ class Lights:
             if self._state_callback:
                 self._state_callback(value)
             else:
-                print("State:", value)
+                self.log("Setting state: {}".format(value))
             self._state = value
             self._debounce = time.time()
 
@@ -35,6 +39,7 @@ class Lights:
         self.state = not self.state
 
     def _set_state(self, state):
+        self.log("Trigger setting state: {}".format(state))
         self.state = state
 
     def add_trigger(self, state, hour, minute, repeat_weekday=False, repeat_weekend=False):

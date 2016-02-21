@@ -1,8 +1,9 @@
 """Web app for controlling lights through a Raspberry PI"""
 
-import time
-import flask
+import logging
+from logging.handlers import RotatingFileHandler
 import argparse
+import os
 from flask import Flask
 from flask import request
 from lights import Lights
@@ -57,12 +58,19 @@ def parse_args():
     return parser.parse_args()
 
 
+def setup_logging():
+    os.makedirs("log", exist_ok=True)
+    handler = RotatingFileHandler("log/lights.log", backupCount=10)
+    handler.setLevel(logging.INFO)
+    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s: %(message)s"))
+    app.logger.addHandler(handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info("Lights Starting...")
+
 if __name__ == "__main__":
     args = parse_args()
-    if (args.debug):
-        app.debug = True
-    if (args.pi):
-        lights = LightsPi()
-    else:
-        lights = Lights()
+    setup_logging()
+    app.debug = args.debug
+    lights = LightsPi() if args.pi else Lights()
+    lights.logger = app.logger
     app.run(host="0.0.0.0")
