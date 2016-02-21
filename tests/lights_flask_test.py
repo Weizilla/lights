@@ -42,15 +42,12 @@ class FlaskTest(TestCase):
         trigger = Trigger(hour=10, minute=20, job_id=10, state=True, next_run_time=None,
                           repeat_weekend=False, repeat_weekday=False)
         self.lights_flask.lights.triggers = [trigger]
-        print("test triggers", self.lights_flask.lights.triggers)
 
         self.lights_flask.request = FakeRequest("GET")
         results = json.loads(self.lights_flask.triggers())
         assert_that(len(results), is_(1))
 
-        print("results", results)
         actual = results[0]
-        print("actual", actual)
         assert_that(actual["job_id"], is_(trigger.job_id))
         assert_that(actual["state"], is_(trigger.state))
         assert_that(actual["hour"], is_(trigger.hour))
