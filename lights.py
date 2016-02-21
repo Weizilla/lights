@@ -40,7 +40,7 @@ class Lights:
     def add_trigger(self, state, hour, minute, repeat_weekday=False, repeat_weekend=False):
         end_date = self._calc_end_date(repeat_weekday, repeat_weekend)
         day_of_week = self._calc_day_of_week(repeat_weekday, repeat_weekend)
-        
+
         job = self._scheduler.add_job(func=self._set_state, args=[state], trigger="cron", hour=hour,
                                       minute=minute, end_date=end_date, day_of_week=day_of_week)
 
@@ -76,7 +76,9 @@ class Lights:
         active_triggers = {}
         for job in self._scheduler.get_jobs():
             job_id = job.id
-            active_triggers[job_id] = self._triggers[job_id]
+            trigger = self._triggers[job_id]
+            trigger.next_run_time = int(job.next_run_time.timestamp())
+            active_triggers[job_id] = trigger
         self._triggers = active_triggers
         return list(self._triggers.values())
 
@@ -84,5 +86,12 @@ class Lights:
         pass
 
 
-
-Trigger = namedtuple("Trigger", "job_id state hour minute next_run_time repeat_weekday repeat_weekend")
+class Trigger():
+    def __init__(self, job_id, state, hour, minute, next_run_time, repeat_weekday, repeat_weekend):
+        self.job_id = job_id
+        self.state = state
+        self.hour = hour
+        self.minute = minute
+        self.next_run_time = next_run_time
+        self.repeat_weekday = repeat_weekday
+        self.repeat_weekend= repeat_weekend

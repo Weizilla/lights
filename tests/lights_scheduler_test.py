@@ -1,13 +1,14 @@
 from hamcrest import *
 from unittest import TestCase
-from unittest.mock import Mock, ANY
+from unittest.mock import Mock, ANY, MagicMock
 from apscheduler.schedulers.background import BackgroundScheduler
 from lights import Lights
 from time import time
+from datetime import datetime
+from pytz import utc
 
 
 class LightsSchedulerTest(TestCase):
-
     def setUp(self):
         self.lights = Lights()
 
@@ -27,7 +28,7 @@ class LightsSchedulerTest(TestCase):
         lights.add_trigger(state, hour, minute)
 
         scheduler.add_job.assert_called_with(func=ANY, args=[state], end_date=ANY, trigger="cron",
-             hour=hour, minute=minute, day_of_week=None)
+                                             hour=hour, minute=minute, day_of_week=None)
 
     def test_add_trigger_to_scheduler_weekday(self):
         scheduler = Mock(wraps=BackgroundScheduler())
@@ -40,7 +41,7 @@ class LightsSchedulerTest(TestCase):
         lights.add_trigger(state, hour, minute, repeat_weekday=repeat_weekday)
 
         scheduler.add_job.assert_called_with(func=ANY, args=[state], end_date=None, trigger="cron",
-            hour=hour, minute=minute, day_of_week=Lights.weekdays)
+                                             hour=hour, minute=minute, day_of_week=Lights.weekdays)
 
     def test_add_trigger_to_scheduler_weekend(self):
         scheduler = Mock(wraps=BackgroundScheduler())
@@ -53,7 +54,7 @@ class LightsSchedulerTest(TestCase):
         lights.add_trigger(state, hour, minute, repeat_weekend=repeat_weekend)
 
         scheduler.add_job.assert_called_with(func=ANY, args=[state], end_date=None, trigger="cron",
-             hour=hour, minute=minute, day_of_week=Lights.weekends)
+                                             hour=hour, minute=minute, day_of_week=Lights.weekends)
 
     def test_add_trigger_to_scheduler_all_week(self):
         scheduler = Mock(wraps=BackgroundScheduler())
@@ -67,7 +68,8 @@ class LightsSchedulerTest(TestCase):
         lights.add_trigger(state, hour, minute, repeat_weekday, repeat_weekend)
 
         scheduler.add_job.assert_called_with(func=ANY, args=[state], end_date=None, trigger="cron",
-             hour=hour, minute=minute, day_of_week=Lights.weekdays + ","  + Lights.weekends)
+                                             hour=hour, minute=minute,
+                                             day_of_week=Lights.weekdays + "," + Lights.weekends)
 
     def test_add_trigger_and_get_job(self):
         state = True
@@ -108,6 +110,24 @@ class LightsSchedulerTest(TestCase):
         assert_that(trigger.next_run_time, is_(greater_than(now)))
         assert_that(trigger.repeat_weekday, is_(False))
         assert_that(trigger.repeat_weekend, is_(False))
+
+    def test_add_and_get_trigger_with_update_run_time(self):
+        next_run_time = datetime(year=2010, month=1, day=1, tzinfo=utc)
+        expected_next_run_time = int(next_run_time.timestamp())
+
+        self.lights.add_trigger(True, 10, 20)
+        job_id = self.lights._scheduler.get_jobs()[0].id
+
+        job = Mock()
+        job.id = job_id
+        job.next_run_time = next_run_time
+        self.lights._scheduler.get_jobs = MagicMock(return_value=[job])
+
+        triggers = self.lights.triggers
+        assert_that(triggers, has_length(1))
+
+        trigger = triggers[0]
+        assert_that(trigger.next_run_time, is_(expected_next_run_time))
 
     def test_add_no_repeat_has_end_date(self):
         self.lights.add_trigger(True, 10, 20)
