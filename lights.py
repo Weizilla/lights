@@ -1,6 +1,8 @@
 import time
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
+import json
+import os
 
 
 class Lights:
@@ -8,14 +10,26 @@ class Lights:
     weekends = "sat,sun"
     all_week = weekdays + "," + weekends
 
-    def __init__(self, state_callback=None, scheduler=None):
+    def __init__(self, state_callback=None, scheduler=None, file_store=None):
         self._state = False
         self._debounce = None
         self._state_callback = state_callback
         self._scheduler = scheduler or BackgroundScheduler()
         self._scheduler.start()
         self._triggers = {}
+        self._file_store = file_store
         self.logger = None
+        self._load_triggers()
+
+    def _load_triggers(self):
+        if self._file_store and os.path.exists(self._file_store):
+            with open(self._file_store) as file_store:
+                contents = file_store.read()
+                if contents:
+                    triggers = json.loads(contents)
+                    for trigger in triggers:
+                        self.add_trigger(**trigger)
+
 
     def log(self, message):
         if self.logger:
@@ -41,7 +55,7 @@ class Lights:
         self.log("Trigger setting state: {}".format(state))
         self.state = state
 
-    def add_trigger(self, state, hour, minute, repeat_weekday=False, repeat_weekend=False):
+    def add_trigger(self, state, hour, minute, repeat_weekday=False, repeat_weekend=False, **kwargs):
         end_date = self._calc_end_date(repeat_weekday, repeat_weekend)
         day_of_week = self._calc_day_of_week(repeat_weekday, repeat_weekend)
 
@@ -54,6 +68,13 @@ class Lights:
                           repeat_weekend=repeat_weekend)
 
         self._triggers[job.id] = trigger
+        self._save_triggers()
+
+    def _save_triggers(self):
+        if self._file_store:
+            with open(self._file_store, "w") as data_file:
+                triggers_json = json.dumps([t.__dict__ for t in self._triggers.values()])
+                data_file.write(triggers_json)
 
     @staticmethod
     def _calc_end_date(repeat_weekday, repeat_weekend):

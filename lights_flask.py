@@ -71,6 +71,8 @@ if __name__ == "__main__":
     args = parse_args()
     setup_logging()
     app.debug = args.debug
-    lights = LightsPi() if args.pi else Lights()
+    os.makedirs("data", exist_ok=True)
+    file_store = "data/triggers.json"
+    lights = LightsPi(file_store=file_store) if args.pi else Lights(file_store=file_store)
     lights.logger = app.logger
     app.run(host="0.0.0.0")

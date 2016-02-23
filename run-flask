@@ -1,1 +1,2 @@
+mkdir -p log && rm -rf log/*
 python3 lights_flask.py $@

@@ -15,8 +15,8 @@ POWERTAIL = 23
 
 
 class LightsPi(Lights):
-    def __init__(self):
-        super().__init__(state_callback=self.set_state)
+    def __init__(self, **kwargs):
+        super().__init__(state_callback=self.set_state, **kwargs)
 
         if io:
             io.setmode(io.BCM)
