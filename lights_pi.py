@@ -22,7 +22,7 @@ class LightsPi(Lights):
             io.setmode(io.BCM)
             io.setup(BIG_BUTTON, io.IN, pull_up_down=io.PUD_UP)
             io.setup(POWERTAIL, io.OUT, initial=0)
-            io.add_event_detect(BIG_BUTTON, io.BOTH, callback=self.btn_cb, bouncetime=500)
+            io.add_event_detect(BIG_BUTTON, io.BOTH, callback=self.btn_cb, bouncetime=1000)
 
     def __enter__(self):
         return self
@@ -35,6 +35,7 @@ class LightsPi(Lights):
             io.output(POWERTAIL, new_state)
 
     def btn_cb(self, channel):
+        self.log("Button toggled")
         self.toggle()
 
     def start(self):
