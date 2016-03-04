@@ -95,6 +95,7 @@ class Lights:
     def remove_trigger(self, job_id):
         del self._triggers[job_id]
         self._scheduler.remove_job(job_id)
+        self._save_triggers()
 
     @property
     def triggers(self):
