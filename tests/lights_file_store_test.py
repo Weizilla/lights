@@ -33,7 +33,7 @@ class LightsFileStoreTest(TestCase):
         self.temp_file.truncate()
         lights = Lights(file_store=self.temp_file.name)
 
-        triggers = lights.triggers
+        triggers = lights.get_triggers()
         assert_that(triggers, has_length(1))
 
         jobs = lights._scheduler.get_jobs()

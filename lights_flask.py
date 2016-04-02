@@ -20,15 +20,16 @@ def index():
 
 @app.route("/api/toggle")
 def toggle():
-    lights.toggle()
-    return json.dumps({"state": lights.state})
+    lights.toggle("web")
+    return json.dumps({"state": lights.get_state()})
 
 
 @app.route("/api/state", methods=["GET", "PUT"])
 def state():
     if request.method == "PUT":
-        lights.state = request.get_json()["state"] in ["true", 1, "True"]
-    return json.dumps({"state": lights.state})
+        new_state = request.get_json()["state"] in ["true", 1, "True"]
+        lights.set_state(new_state, "web")
+    return json.dumps({"state": lights.get_state()})
 
 
 @app.route("/api/triggers", methods=["GET", "PUT"])
@@ -36,7 +37,7 @@ def triggers():
     if request.method == "PUT":
         trigger = request.get_json()
         lights.add_trigger(**trigger)
-    return json.dumps([t.__dict__ for t in lights.triggers])
+    return json.dumps([t.__dict__ for t in lights.get_triggers()])
 
 
 @app.route("/api/triggers/<job_id>", methods=["DELETE"])

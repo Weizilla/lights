@@ -10,10 +10,9 @@ class Lights:
     weekends = "sat,sun"
     all_week = weekdays + "," + weekends
 
-    def __init__(self, state_callback=None, scheduler=None, file_store=None):
+    def __init__(self, scheduler=None, file_store=None):
         self._state = False
         self._debounce = None
-        self._state_callback = state_callback
         self._scheduler = scheduler or BackgroundScheduler()
         self._scheduler.start()
         self._triggers = {}
@@ -35,21 +34,17 @@ class Lights:
         if self.logger:
             self.logger.info(message)
 
-    @property
-    def state(self):
+    def get_state(self):
         return self._state
 
-    @state.setter
-    def state(self, value):
+    def set_state(self, value, source):
         if self._debounce is None or (time.time() - self._debounce > 1):
-            if self._state_callback:
-                self._state_callback(value)
-            self.log("Setting state: {}".format(value))
+            self.log("Setting state {} from {}".format(value, source))
             self._state = value
             self._debounce = time.time()
 
-    def toggle(self):
-        self.state = not self.state
+    def toggle(self, source):
+        self.set_state(not self.get_state(), source)
 
     def _set_state(self, state):
         self.log("Trigger setting state: {}".format(state))
@@ -97,8 +92,7 @@ class Lights:
         self._scheduler.remove_job(job_id)
         self._save_triggers()
 
-    @property
-    def triggers(self):
+    def get_triggers(self):
         active_triggers = {}
         for job in self._scheduler.get_jobs():
             job_id = job.id
@@ -120,4 +114,4 @@ class Trigger():
         self.minute = minute
         self.next_run_time = next_run_time
         self.repeat_weekday = repeat_weekday
-        self.repeat_weekend= repeat_weekend
+        self.repeat_weekend = repeat_weekend

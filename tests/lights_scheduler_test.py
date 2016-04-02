@@ -88,7 +88,7 @@ class LightsSchedulerTest(TestCase):
         jobs = self.lights._scheduler.get_jobs()
         assert_that(jobs, has_length(num))
 
-        triggers = self.lights.triggers
+        triggers = self.lights.get_triggers()
         assert_that(triggers, has_length(num))
 
     def test_add_and_get_trigger(self):
@@ -99,7 +99,7 @@ class LightsSchedulerTest(TestCase):
         self.lights.add_trigger(state, hour, minute)
 
         job_id = self.lights._scheduler.get_jobs()[0].id
-        triggers = self.lights.triggers
+        triggers = self.lights.get_triggers()
         assert_that(triggers, has_length(1))
 
         trigger = triggers[0]
@@ -123,7 +123,7 @@ class LightsSchedulerTest(TestCase):
         job.next_run_time = next_run_time
         self.lights._scheduler.get_jobs = MagicMock(return_value=[job])
 
-        triggers = self.lights.triggers
+        triggers = self.lights.get_triggers()
         assert_that(triggers, has_length(1))
 
         trigger = triggers[0]
@@ -147,7 +147,7 @@ class LightsSchedulerTest(TestCase):
         jobs = self.lights._scheduler.get_jobs()
         assert_that(jobs, has_length(1))
 
-        triggers = self.lights.triggers
+        triggers = self.lights.get_triggers()
         assert_that(triggers, has_length(1))
 
         trigger = triggers[0]
@@ -158,12 +158,12 @@ class LightsSchedulerTest(TestCase):
 
         jobs = self.lights._scheduler.get_jobs()
         job_id = jobs[0].id
-        triggers = self.lights.triggers
+        triggers = self.lights.get_triggers()
         assert_that(triggers, has_length(1))
 
         self.lights.remove_trigger(job_id)
 
-        triggers = self.lights.triggers
+        triggers = self.lights.get_triggers()
         assert_that(triggers, is_(empty()))
 
     def test_delete_job_from_scheduler(self):
