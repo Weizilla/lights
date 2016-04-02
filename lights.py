@@ -42,19 +42,20 @@ class Lights:
             self.log("Setting state {} from {}".format(value, source))
             self._state = value
             self._debounce = time.time()
+            self._set_state(value)
+
+    """For sub classes to overwrite on setting state after debounce"""
+    def _set_state(self, value):
+        pass
 
     def toggle(self, source):
         self.set_state(not self.get_state(), source)
-
-    def _set_state(self, state):
-        self.log("Trigger setting state: {}".format(state))
-        self.state = state
 
     def add_trigger(self, state, hour, minute, repeat_weekday=False, repeat_weekend=False, **kwargs):
         end_date = self._calc_end_date(repeat_weekday, repeat_weekend)
         day_of_week = self._calc_day_of_week(repeat_weekday, repeat_weekend)
 
-        job = self._scheduler.add_job(func=self._set_state, args=[state], trigger="cron", hour=hour,
+        job = self._scheduler.add_job(func=self.set_state, args=[state, "trigger"], trigger="cron", hour=hour,
                                       minute=minute, end_date=end_date, day_of_week=day_of_week)
 
         trigger = Trigger(job_id=job.id, state=state, hour=hour, minute=minute,

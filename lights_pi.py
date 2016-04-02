@@ -16,7 +16,7 @@ POWERTAIL = 23
 
 class LightsPi(Lights):
     def __init__(self, **kwargs):
-        super().__init__(state_callback=self.set_state, **kwargs)
+        super().__init__(**kwargs)
 
         if io:
             io.setmode(io.BCM)
@@ -30,13 +30,13 @@ class LightsPi(Lights):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.stop()
 
-    def set_state(self, new_state):
+    def _set_state(self, value):
         if io:
-            io.output(POWERTAIL, new_state)
+            io.output(POWERTAIL, value)
 
     def btn_cb(self, channel):
         self.log("Button toggled")
-        self.toggle()
+        self.toggle("button")
 
     def start(self):
         while True:
