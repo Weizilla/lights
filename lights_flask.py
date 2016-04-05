@@ -10,6 +10,8 @@ from lights import Lights
 from lights_pi import LightsPi
 import json
 
+from lights_sqlite_store import LightsSqliteStore
+
 app = Flask(__name__, static_url_path="")
 
 
@@ -73,7 +75,7 @@ if __name__ == "__main__":
     setup_logging()
     app.debug = args.debug
     os.makedirs("data", exist_ok=True)
-    file_store = "data/triggers.json"
-    lights = LightsPi(file_store=file_store) if args.pi else Lights(file_store=file_store)
+    store = LightsSqliteStore("data/triggers.db")
+    lights = LightsPi(store=store) if args.pi else Lights(store=store)
     lights.logger = app.logger
     app.run(host="0.0.0.0")

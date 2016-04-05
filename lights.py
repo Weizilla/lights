@@ -1,8 +1,8 @@
 import time
 from datetime import datetime, timedelta
+
+from apscheduler.jobstores.base import JobLookupError
 from apscheduler.schedulers.background import BackgroundScheduler
-import json
-import os
 
 
 class Lights:
@@ -10,25 +10,21 @@ class Lights:
     weekends = "sat,sun"
     all_week = weekdays + "," + weekends
 
-    def __init__(self, scheduler=None, file_store=None):
+    def __init__(self, scheduler=None, store=None):
         self._state = False
         self._debounce = None
         self._scheduler = scheduler or BackgroundScheduler()
         self._scheduler.start()
         self._triggers = {}
-        self._file_store = file_store
+        self._store = store
         self.logger = None
-        self._load_triggers()
+        if self._store:
+            self._load_triggers()
 
     def _load_triggers(self):
-        if self._file_store and os.path.exists(self._file_store):
-            with open(self._file_store) as file_store:
-                contents = file_store.read()
-                if contents:
-                    triggers = json.loads(contents)
-                    for trigger in triggers:
-                        self.add_trigger(**trigger)
-
+        triggers = self._store.read_triggers()
+        [self._add_trigger(**t.__dict__) for t in triggers]
+        self.log("Loaded {} triggers".format(len(self._triggers)))
 
     def log(self, message):
         if self.logger:
@@ -52,25 +48,23 @@ class Lights:
         self.set_state(not self.get_state(), source)
 
     def add_trigger(self, state, hour, minute, repeat_weekday=False, repeat_weekend=False, **kwargs):
+        trigger = self._add_trigger(state, hour, minute, repeat_weekday, repeat_weekend)
+
+        if self._store:
+            self._store.add_trigger(trigger)
+
+    def _add_trigger(self, state, hour, minute, repeat_weekday, repeat_weekend, job_id=None, **kwargs):
         end_date = self._calc_end_date(repeat_weekday, repeat_weekend)
         day_of_week = self._calc_day_of_week(repeat_weekday, repeat_weekend)
-
-        job = self._scheduler.add_job(func=self.set_state, args=[state, "trigger"], trigger="cron", hour=hour,
-                                      minute=minute, end_date=end_date, day_of_week=day_of_week)
-
+        job = self._scheduler.add_job(func=self.set_state, args=[state, "trigger"], trigger="cron",
+                                      id=job_id, hour=hour, minute=minute, end_date=end_date,
+                                      day_of_week=day_of_week)
         trigger = Trigger(job_id=job.id, state=state, hour=hour, minute=minute,
                           next_run_time=int(job.next_run_time.timestamp()),
                           repeat_weekday=repeat_weekday,
                           repeat_weekend=repeat_weekend)
-
         self._triggers[job.id] = trigger
-        self._save_triggers()
-
-    def _save_triggers(self):
-        if self._file_store:
-            with open(self._file_store, "w") as data_file:
-                triggers_json = json.dumps([t.__dict__ for t in self._triggers.values()])
-                data_file.write(triggers_json)
+        return trigger
 
     @staticmethod
     def _calc_end_date(repeat_weekday, repeat_weekend):
@@ -89,9 +83,14 @@ class Lights:
             return None
 
     def remove_trigger(self, job_id):
-        del self._triggers[job_id]
-        self._scheduler.remove_job(job_id)
-        self._save_triggers()
+        if job_id in self._triggers:
+            del self._triggers[job_id]
+        try:
+            self._scheduler.remove_job(job_id)
+        except JobLookupError:
+            self.log("Job not found {}".format(job_id))
+        if self._store:
+            self._store.remove_trigger(job_id)
 
     def get_triggers(self):
         active_triggers = {}
@@ -108,7 +107,7 @@ class Lights:
 
 
 class Trigger():
-    def __init__(self, job_id, state, hour, minute, next_run_time, repeat_weekday, repeat_weekend):
+    def __init__(self, job_id, state, hour, minute, repeat_weekday, repeat_weekend, next_run_time=None):
         self.job_id = job_id
         self.state = state
         self.hour = hour
