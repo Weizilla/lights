@@ -28,7 +28,7 @@ class LightsSchedulerTest(TestCase):
         lights.add_trigger(state, hour, minute)
 
         scheduler.add_job.assert_called_with(func=ANY, args=[state, "trigger"], end_date=ANY, trigger="cron",
-                                             hour=hour, minute=minute, day_of_week=None)
+                                             id=None, hour=hour, minute=minute, day_of_week=None)
 
     def test_add_trigger_to_scheduler_weekday(self):
         scheduler = Mock(wraps=BackgroundScheduler())
@@ -41,7 +41,7 @@ class LightsSchedulerTest(TestCase):
         lights.add_trigger(state, hour, minute, repeat_weekday=repeat_weekday)
 
         scheduler.add_job.assert_called_with(func=ANY, args=[state, "trigger"], end_date=None, trigger="cron",
-                                             hour=hour, minute=minute, day_of_week=Lights.weekdays)
+                                             id=None, hour=hour, minute=minute, day_of_week=Lights.weekdays)
 
     def test_add_trigger_to_scheduler_weekend(self):
         scheduler = Mock(wraps=BackgroundScheduler())
@@ -54,7 +54,7 @@ class LightsSchedulerTest(TestCase):
         lights.add_trigger(state, hour, minute, repeat_weekend=repeat_weekend)
 
         scheduler.add_job.assert_called_with(func=ANY, args=[state, "trigger"], end_date=None, trigger="cron",
-                                             hour=hour, minute=minute, day_of_week=Lights.weekends)
+                                             id=None, hour=hour, minute=minute, day_of_week=Lights.weekends)
 
     def test_add_trigger_to_scheduler_all_week(self):
         scheduler = Mock(wraps=BackgroundScheduler())
@@ -68,7 +68,7 @@ class LightsSchedulerTest(TestCase):
         lights.add_trigger(state, hour, minute, repeat_weekday, repeat_weekend)
 
         scheduler.add_job.assert_called_with(func=ANY, args=[state, "trigger"], end_date=None, trigger="cron",
-                                             hour=hour, minute=minute,
+                                             id=None, hour=hour, minute=minute,
                                              day_of_week=Lights.weekdays + "," + Lights.weekends)
 
     def test_add_trigger_and_get_job(self):
