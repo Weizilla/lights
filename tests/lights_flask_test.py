@@ -2,8 +2,14 @@ from unittest import TestCase
 from hamcrest import assert_that, is_
 from unittest.mock import MagicMock
 import lights_flask as lights_flask
-from lights import Lights, Trigger
+from lights import Lights, Trigger, Entry
 import json
+from freezegun import freeze_time
+from datetime import datetime
+from pytz import utc
+
+NOW = datetime(2016, 4, 7, 12, 23, 57, 0, utc)
+TIMESTAMP = 1460031837
 
 
 class FlaskTest(TestCase):
@@ -89,6 +95,20 @@ class FlaskTest(TestCase):
         self.lights_flask.remove_trigger(job_id)
 
         self.lights.remove_trigger.assert_called_with(job_id)
+
+    @freeze_time(NOW)
+    def test_get_history(self):
+        source = "TEST"
+        entry = Entry(TIMESTAMP, source)
+        self.lights.get_history = MagicMock(return_value=[entry])
+        self.lights_flask.request = FakeRequest("GET")
+
+        results = json.loads(self.lights_flask.history())
+        assert_that(len(results), is_(1))
+
+        actual = results[0]
+        assert_that(actual["timestamp"], is_(TIMESTAMP))
+        assert_that(actual["source"], is_(source))
 
 
 class FakeRequest:

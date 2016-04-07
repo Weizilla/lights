@@ -1,8 +1,8 @@
 import time
 from datetime import datetime, timedelta
-
 from apscheduler.jobstores.base import JobLookupError
 from apscheduler.schedulers.background import BackgroundScheduler
+from pytz import utc
 
 
 class Lights:
@@ -39,21 +39,26 @@ class Lights:
             self._state = value
             self._debounce = time.time()
             self._set_state(value)
+            if self._store:
+                self._store.add_entry(source)
 
     """For sub classes to overwrite on setting state after debounce"""
+
     def _set_state(self, value):
         pass
 
     def toggle(self, source):
         self.set_state(not self.get_state(), source)
 
-    def add_trigger(self, state, hour, minute, repeat_weekday=False, repeat_weekend=False, **kwargs):
+    def add_trigger(self, state, hour, minute, repeat_weekday=False, repeat_weekend=False,
+                    **kwargs):
         trigger = self._add_trigger(state, hour, minute, repeat_weekday, repeat_weekend)
 
         if self._store:
             self._store.add_trigger(trigger)
 
-    def _add_trigger(self, state, hour, minute, repeat_weekday, repeat_weekend, job_id=None, **kwargs):
+    def _add_trigger(self, state, hour, minute, repeat_weekday, repeat_weekend, job_id=None,
+                     **kwargs):
         end_date = self._calc_end_date(repeat_weekday, repeat_weekend)
         day_of_week = self._calc_day_of_week(repeat_weekday, repeat_weekend)
         job = self._scheduler.add_job(func=self.set_state, args=[state, "trigger"], trigger="cron",
@@ -102,11 +107,14 @@ class Lights:
         self._triggers = active_triggers
         return list(self._triggers.values())
 
+    def get_history(self):
+        return self._store.read_history() if self._store else []
+
     def stop(self):
         pass
 
 
-class Trigger():
+class Trigger:
     def __init__(self, job_id, state, hour, minute, repeat_weekday, repeat_weekend, next_run_time=None):
         self.job_id = job_id
         self.state = state
@@ -115,3 +123,10 @@ class Trigger():
         self.next_run_time = next_run_time
         self.repeat_weekday = repeat_weekday
         self.repeat_weekend = repeat_weekend
+
+
+class Entry:
+    def __init__(self, timestamp, source):
+        self.timestamp = timestamp
+        self.source = source
+        self.datetime = datetime.fromtimestamp(timestamp, utc)

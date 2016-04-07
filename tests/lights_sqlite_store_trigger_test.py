@@ -8,7 +8,7 @@ import os
 import shutil
 
 
-class LightsStoreTest(TestCase):
+class LightsStoreTriggerTest(TestCase):
 
     def setUp(self):
         self.temp_file = NamedTemporaryFile(mode="r+", encoding="utf-8", delete=False)
@@ -100,6 +100,6 @@ class LightsStoreTest(TestCase):
         assert_that(conn, is_not(None))
 
         cursor = conn.cursor()
-        rows = cursor.execute("SELECT * from triggers").fetchall()
+        rows = cursor.execute("SELECT * FROM triggers").fetchall()
         assert_that(rows, has_length(1))
         conn.close()

@@ -4,18 +4,15 @@ app.controller("LightsController", function($http) {
     var self = this;
     self.lights = "LIGHTS";
     self.triggers = [];
+    self.history = [];
     self.newTrigger = new Trigger();
 
     self.toggle = function() {
-        $http.get("/api/toggle").success(function(data) {
-            self.updateState();
-        });
+        $http.get("/api/toggle").success(self.updateAll);
     };
 
     self.setState = function(state) {
-        $http.put("/api/state", {state: state}).success(function(data) {
-            self.updateState();
-        })
+        $http.put("/api/state", {state: state}).success(self.updateAll);
     };
 
     self.updateState = function() {
@@ -38,18 +35,33 @@ app.controller("LightsController", function($http) {
     self.addTrigger = function() {
         $http.put("api/triggers", self.newTrigger.asData()).success(function(data) {
             self.newTrigger = new Trigger();
-            self.updateTriggers();
+            self.updateAll();
         });
     };
 
     self.removeTrigger = function(jobId) {
-        $http.delete("api/triggers/" + jobId).success(function(data) {
-            self.updateTriggers();
-        });
+        $http.delete("api/triggers/" + jobId).success(self.updateAll);
     };
 
-    self.updateState();
-    self.updateTriggers();
+    self.updateHistory = function() {
+        $http.get("api/history").success(function(data) {
+            self.history = data.map(function(data) {
+                return new Entry(data);
+            });
+            self.history.sort(function(a, b) {
+                return b.timestamp - a.timestamp;
+            });
+        })
+    };
+
+    self.updateAll = function() {
+        self.updateState();
+        self.updateTriggers();
+        self.updateHistory();
+    };
+
+    self.updateAll();
+  
 
     return self;
 });

@@ -10,7 +10,10 @@ body {
     font-size: 250%;
 }
 .container {
+    display: flex;
+    flex-direction: column;
     width: 90%;
+    max-height: 90vh;
 }
 
 .container > * {
@@ -71,6 +74,24 @@ body {
 .button-add {
     max-width: 200px;
     background-color: dodgerblue;
+}
+
+#triggers td, #history td, th {
+    text-align: left;
+}
+
+#triggers, #history {
+    width: 100%;
+}
+
+#history-container {
+    flex-shrink: 10;
+    display: flex;
+    overflow: auto;
+}
+
+#history {
+    max-height: 20%;
 }
 
 .on {

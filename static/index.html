@@ -38,7 +38,7 @@
                     ng-click="ctrl.addTrigger()"><i class="fa fa-plus"></i></button>
         </div>
     </div>
-    <table class="triggers">
+    <table id="triggers">
         <thead>
         <tr>
             <th>Next</th>
@@ -60,6 +60,22 @@
             </button></td>
         </tr>
     </table>
+    <div id="history-container">
+        <table id="history">
+            <thead>
+            <tr>
+                <th>Datetime</th>
+                <th>State</th>
+                <th>Source</th>
+            </tr>
+            </thead>
+            <tr class="entry" ng-repeat="entry in ctrl.history">
+                <td>{{ entry.datetime | date: 'EEE MM d h:mm:ss a'}}</td>
+                <td><i class="fa" ng-class="entry.state ? 'fa-sun-o' : 'fa-moon-o'"></i></td>
+                <td>{{ entry.source }}</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 
@@ -67,6 +83,7 @@
 <script src="lib/angular-1.5.0/angular.min.js"></script>
 <script src="js/app.js"></script>
 <script src="js/trigger.js"></script>
+<script src="js/entry.js"></script>
 
 </body>
 </html>

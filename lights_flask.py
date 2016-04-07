@@ -42,6 +42,15 @@ def triggers():
     return json.dumps([t.__dict__ for t in lights.get_triggers()])
 
 
+@app.route("/api/history")
+def history():
+    return json.dumps([ignore_key(h.__dict__, "datetime") for h in lights.get_history()])
+
+
+def ignore_key(dictionary, ignore):
+    return {key: dictionary[key] for key in dictionary if key is not ignore}
+
+
 @app.route("/api/triggers/<job_id>", methods=["DELETE"])
 def remove_trigger(job_id):
     lights.remove_trigger(job_id)
@@ -70,12 +79,13 @@ def setup_logging():
     app.logger.setLevel(logging.INFO)
     app.logger.info("Lights Starting...")
 
+
 if __name__ == "__main__":
     args = parse_args()
     setup_logging()
     app.debug = args.debug
     os.makedirs("data", exist_ok=True)
-    store = LightsSqliteStore("data/triggers.db")
+    store = LightsSqliteStore("data/lights.db")
     lights = LightsPi(store=store) if args.pi else Lights(store=store)
     lights.logger = app.logger
     app.run(host="0.0.0.0")
