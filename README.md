@@ -11,5 +11,8 @@ Raspberry PI Nightlight Controller
 
 ## To Do
 1. Sort UI by next run time
-2. Space out trigger elements
+2. Improve UI
+  1. Use flexbox and div for everything
+  2. History is cut off if screen too short
 3. Add stop button to clean up gpio and stop server
+4. Fix bug where all history shows up as off state
