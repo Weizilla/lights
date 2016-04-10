@@ -2,35 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lights</title>
     <link rel="stylesheet" href="lib/font-awesome-4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="lib/pure-css-0.6.0/base-min.css">
     <link rel="stylesheet" href="lib/pure-css-0.6.0/buttons-min.css">
     <link rel="stylesheet" href="app.css">
 </head>
+
 <body ng-app="lights-app" ng-controller="LightsController as ctrl">
 
-<div class="container" ng-class="{true: 'on', false: 'off'}[ctrl.lights]">
-<!--<div class="container">-->
-    <div class="lights">
-        <button class="pure-button button-blue button-toggle" ng-click="ctrl.toggle()">TOGGLE</button>
-        <button class="pure-button button-on" ng-click="ctrl.setState(true)">ON</button>
-        <button class="pure-button button-off" ng-click="ctrl.setState(false)">OFF</button>
-        <button class="pure-button button-stop" ng-click="ctrl.stop()">STOP</button>
+<div id="main-container" ng-class="{true: 'on', false: 'off'}[ctrl.lights]">
+    <div id="buttons-container">
+        <button id="button-toggle" class="pure-button" ng-click="ctrl.toggle()">TOGGLE</button>
+        <div id="sub-buttons-container">
+            <button id="button-on" class="pure-button" ng-click="ctrl.setState(true)">ON</button>
+            <button id="button-off" class="pure-button" ng-click="ctrl.setState(false)">OFF</button>
+            <button id="button-stop" class="pure-button" ng-click="ctrl.stop()">STOP</button>
+        </div>
     </div>
-    <div id="message">
-        {{ ctrl.message }}
+    <div id="message-container" ng-show="ctrl.message !== ''">
+        Message: {{ ctrl.message }}
     </div>
-    <div class="time">
-        <div class="time-container">
-            <label class="time-label">Add</label>
-            <button class="pure-button"
+    <div id="add-trigger-container">
+            <label id="add-label">Add</label>
+            <button id="add-state" class="pure-button"
                     ng-model="ctrl.newTrigger.state"
                     ng-click="ctrl.newTrigger.toggleState()">
                 <i class="fa" ng-class="ctrl.newTrigger.state ? 'fa-sun-o' : 'fa-moon-o'"></i>
                 {{ ctrl.newTrigger.stateName() }}</button>
-            <input class="time-input" id="time-on" type="time" ng-model="ctrl.newTrigger.time">
-            <div class="repeat-container">
+            <input id="add-time" type="time" ng-model="ctrl.newTrigger.time">
+            <div id="add-repeat-container">
                 <button class="pure-button button-repeat" ng-click="ctrl.newTrigger.toggleRepeatWeekday()">
                     <i class="fa" ng-class="ctrl.newTrigger.repeatWeekday ? 'fa-check-square-o' : 'fa-square-o'"></i>
                     <i class="fa fa-repeat"></i> M-F</button>
@@ -38,32 +40,33 @@
                     <i class="fa" ng-class="ctrl.newTrigger.repeatWeekend ? 'fa-check-square-o' : 'fa-square-o'"></i>
                     <i class="fa fa-repeat"></i> S-S</button>
             </div>
-            <button class="pure-button button-add"
-                    ng-click="ctrl.addTrigger()"><i class="fa fa-plus"></i></button>
-        </div>
+            <button id="add-button" class="pure-button" ng-click="ctrl.addTrigger()"><i class="fa fa-plus"></i></button>
     </div>
-    <table id="triggers">
-        <thead>
-        <tr>
-            <th>Next</th>
-            <th>State</th>
-            <th>Time</th>
-            <th><i class="fa fa-repeat"></i> M-F</th>
-            <th><i class="fa fa-repeat"></i> S-S</th>
-        </tr>
-        </thead>
-        <tr class="trigger" ng-repeat="trigger in ctrl.triggers">
-            <td>{{ trigger.nextRunTime | date: 'EEE MMM d h:mm a' }}</td>
-            <td><i class="fa" ng-class="trigger.state ? 'fa-sun-o' : 'fa-moon-o'"></i></td>
-            <td>{{ trigger.time }}</td>
-            <td><i class="fa" ng-class="trigger.repeatWeekday ? 'fa-circle' : 'fa-circle-o'"></i></td>
-            <td><i class="fa" ng-class="trigger.repeatWeekend ? 'fa-circle' : 'fa-circle-o'"></i></td>
-            <td><button class="pure-button button-delete"
-                    ng-click="ctrl.removeTrigger(trigger.jobId)">
-                <i class="fa fa-times"></i>
-            </button></td>
-        </tr>
-    </table>
+    <div id="triggers-container">
+        <table id="triggers">
+            <thead>
+            <tr>
+                <th>Next</th>
+                <th>State</th>
+                <th>Time</th>
+                <th><i class="fa fa-repeat"></i> M-F</th>
+                <th><i class="fa fa-repeat"></i> S-S</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tr class="trigger" ng-repeat="trigger in ctrl.triggers">
+                <td>{{ trigger.nextRunTime | date: 'EEE MMM d h:mm a' }}</td>
+                <td><i class="fa" ng-class="trigger.state ? 'fa-sun-o' : 'fa-moon-o'"></i></td>
+                <td>{{ trigger.time }}</td>
+                <td><i class="fa" ng-class="trigger.repeatWeekday ? 'fa-circle' : 'fa-circle-o'"></i></td>
+                <td><i class="fa" ng-class="trigger.repeatWeekend ? 'fa-circle' : 'fa-circle-o'"></i></td>
+                <td><button class="pure-button button-delete"
+                        ng-click="ctrl.removeTrigger(trigger.jobId)">
+                    <i class="fa fa-times"></i>
+                </button></td>
+            </tr>
+        </table>
+    </div>
     <div id="history-container">
         <table id="history">
             <thead>
@@ -74,7 +77,7 @@
             </tr>
             </thead>
             <tr class="entry" ng-repeat="entry in ctrl.history">
-                <td>{{ entry.datetime | date: 'EEE MM d h:mm:ss a'}}</td>
+                <td>{{ entry.datetime | date: 'EEE MMM d h:mm:ss a'}}</td>
                 <td><i class="fa" ng-class="entry.state ? 'fa-sun-o' : 'fa-moon-o'"></i></td>
                 <td>{{ entry.source }}</td>
             </tr>

@@ -3,101 +3,104 @@
     /*border: 2px solid black;*/
 }
 
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 250%;
-}
-
-.container {
+#main-container {
     display: flex;
     flex-direction: column;
-    width: 90%;
-    max-height: 90vh;
+    max-height: 98vh;
 }
 
-.container > * {
-    margin: 20px;
+#main-container > * {
+    margin: 1%;
 }
 
-.lights {
+#buttons-container {
     display: flex;
+    flex-direction: column;
+    flex: 1 1 25%;
+}
+
+#button-toggle {
+    background-color: dodgerblue;
+}
+
+#sub-buttons-container {
+    display: flex;
+    align-content: stretch;
     flex-wrap: wrap;
 }
 
-.button-toggle {
-    background-color: dodgerblue;
-    width: 100%;
-    font-size: 300%;
+#sub-buttons-container > * {
+    flex: 1 1 auto;
 }
 
-.button-on {
+#button-on {
     background: rgb(28, 184, 65);
-    flex: 1 1 33%;
 }
 
-.button-off {
+#button-off {
     background: rgb(202, 60, 60);
-    flex: 1 1 33%;
 }
 
-.button-stop {
+#button-stop {
     background: grey;
-    flex: 1 1 33%;
 }
 
-.time-container {
+#message-container {
+    flex: 1 1 5%;
+}
+
+#add-trigger-container {
     display: flex;
+    flex: 1 1 10%;
     justify-content: space-between;
     align-items: stretch;
-    margin: 10px 0 0 0;
+    /*flex-wrap: wrap;*/
 }
 
-.time-container > * {
-    margin: 5px;
+#add-trigger-container > * {
+    flex: 1 1 auto;
 }
 
-.time-label {
+#add-label {
     align-self: center;
-    max-width: 100px;
 }
 
-.time-input {
-}
-
-.repeat-container {
+#add-repeat-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: stretch;
+    align-content: stretch;
+    justify-content: space-between;
 }
 
-.button-repeat {
-    font-size: 80%;
-    margin: 5px;
+#add-repeat-container > * {
+    flex: 1 1 auto;
 }
 
-.button-add {
-    max-width: 200px;
+#add-button {
     background-color: dodgerblue;
+}
+
+#triggers-container {
+    display: flex;
+    flex: 1 1 30%;
+    overflow: auto;
+}
+
+#history-container {
+    display: flex;
+    flex: 1 3 30%;
+    overflow: auto;
 }
 
 #triggers td, #history td, th {
     text-align: left;
+    padding: 1px;
 }
 
 #triggers, #history {
     width: 100%;
-}
-
-#history-container {
-    flex-shrink: 10;
-    display: flex;
-    overflow: auto;
-}
-
-#history {
-    max-height: 20%;
 }
 
 .on {
@@ -106,4 +109,8 @@ body {
 
 .off {
     background: lightcoral;
+}
+
+.button-delete {
+    background: darkred;
 }
