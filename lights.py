@@ -111,7 +111,7 @@ class Lights:
         return self._store.read_history() if self._store else []
 
     def stop(self):
-        pass
+        return True
 
 
 class Trigger:

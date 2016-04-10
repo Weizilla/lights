@@ -9,6 +9,7 @@ body {
     align-items: center;
     font-size: 250%;
 }
+
 .container {
     display: flex;
     flex-direction: column;
@@ -33,12 +34,17 @@ body {
 
 .button-on {
     background: rgb(28, 184, 65);
-    flex: 1 1 50%;
+    flex: 1 1 33%;
 }
 
 .button-off {
     background: rgb(202, 60, 60);
-    flex: 1 1 50%;
+    flex: 1 1 33%;
+}
+
+.button-stop {
+    background: grey;
+    flex: 1 1 33%;
 }
 
 .time-container {

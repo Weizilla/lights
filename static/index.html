@@ -16,6 +16,10 @@
         <button class="pure-button button-blue button-toggle" ng-click="ctrl.toggle()">TOGGLE</button>
         <button class="pure-button button-on" ng-click="ctrl.setState(true)">ON</button>
         <button class="pure-button button-off" ng-click="ctrl.setState(false)">OFF</button>
+        <button class="pure-button button-stop" ng-click="ctrl.stop()">STOP</button>
+    </div>
+    <div id="message">
+        {{ ctrl.message }}
     </div>
     <div class="time">
         <div class="time-container">

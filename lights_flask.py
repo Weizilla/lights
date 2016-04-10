@@ -59,8 +59,8 @@ def remove_trigger(job_id):
 
 @app.route("/api/stop")
 def stop():
-    lights.stop()
-    return "{}"
+    status = lights.stop()
+    return json.dumps({"stop": status})
 
 
 def parse_args():

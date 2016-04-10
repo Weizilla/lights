@@ -3,6 +3,7 @@ app = angular.module("lights-app", []);
 app.controller("LightsController", function($http) {
     var self = this;
     self.lights = "LIGHTS";
+    self.message = "";
     self.triggers = [];
     self.history = [];
     self.newTrigger = new Trigger();
@@ -54,6 +55,12 @@ app.controller("LightsController", function($http) {
         })
     };
 
+    self.stop = function() {
+        $http.get("api/stop").success(function(data) {
+            self.message = "Stopped " + data["stop"];
+        })
+    };
+
     self.updateAll = function() {
         self.updateState();
         self.updateTriggers();
@@ -61,7 +68,7 @@ app.controller("LightsController", function($http) {
     };
 
     self.updateAll();
-  
+
 
     return self;
 });

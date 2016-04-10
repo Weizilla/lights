@@ -51,6 +51,7 @@ class LightsPi(Lights):
     def stop(self):
         if io:
             io.cleanup()
+        return True
 
 
 if __name__ == "__main__":

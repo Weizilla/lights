@@ -110,6 +110,13 @@ class FlaskTest(TestCase):
         assert_that(actual["timestamp"], is_(TIMESTAMP))
         assert_that(actual["source"], is_(source))
 
+    def test_stop(self):
+        self.lights.stop = MagicMock(return_value=True)
+        self.lights_flask.request = FakeRequest("GET")
+
+        results = json.loads(self.lights_flask.stop())
+        assert_that(results["stop"], is_(True))
+
 
 class FakeRequest:
     def __init__(self, method, json=None):
