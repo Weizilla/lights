@@ -1,6 +1,8 @@
 """Web app for controlling lights through a Raspberry PI"""
 
 import logging
+import time
+from threading import Thread
 from logging.handlers import RotatingFileHandler
 import argparse
 import os
@@ -60,7 +62,16 @@ def remove_trigger(job_id):
 @app.route("/api/stop")
 def stop():
     status = lights.stop()
+    _shutdown()
     return json.dumps({"stop": status})
+
+
+def _shutdown():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        print('Not running with the Werkzeug Server')
+    else:
+        func()
 
 
 def parse_args():
