@@ -122,6 +122,7 @@ class FakeRequest:
     def __init__(self, method, json=None):
         self.method = method
         self._json = json
+        self.environ = {}
 
     def get_json(self):
         return self._json
