@@ -32,7 +32,7 @@ class LightsStoreTest(TestCase):
     def test_should_add_history_entry_to_store(self):
         self.store.add_entry = MagicMock()
         self.lights.set_state(True, "test")
-        self.store.add_entry.assert_called_with("test")
+        self.store.add_entry.assert_called_with(True, "test")
 
     def test_should_read_history_from_store(self):
         self.store.read_history = MagicMock()

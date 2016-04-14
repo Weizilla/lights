@@ -40,7 +40,7 @@ class Lights:
             self._debounce = time.time()
             self._set_state(value)
             if self._store:
-                self._store.add_entry(source)
+                self._store.add_entry(value, source)
 
     """For sub classes to overwrite on setting state after debounce"""
 
@@ -126,7 +126,8 @@ class Trigger:
 
 
 class Entry:
-    def __init__(self, timestamp, source):
+    def __init__(self, timestamp, state, source):
         self.timestamp = timestamp
+        self.state = state
         self.source = source
         self.datetime = datetime.fromtimestamp(timestamp, utc)

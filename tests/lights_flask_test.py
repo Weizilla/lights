@@ -99,7 +99,7 @@ class FlaskTest(TestCase):
     @freeze_time(NOW)
     def test_get_history(self):
         source = "TEST"
-        entry = Entry(TIMESTAMP, source)
+        entry = Entry(TIMESTAMP, True, source)
         self.lights.get_history = MagicMock(return_value=[entry])
         self.lights_flask.request = FakeRequest("GET")
 
@@ -108,6 +108,7 @@ class FlaskTest(TestCase):
 
         actual = results[0]
         assert_that(actual["timestamp"], is_(TIMESTAMP))
+        assert_that(actual["state"], is_(True))
         assert_that(actual["source"], is_(source))
 
     def test_stop(self):

@@ -34,7 +34,7 @@ class LightsStoreHistoryTest(TestCase):
     @freeze_time(NOW)
     def test_should_add_entry_to_history_db(self):
         store = LightsSqliteStore(self.temp_file.name)
-        store.add_entry(SOURCE)
+        store.add_entry(True, SOURCE)
 
         conn = sqlite3.connect(self.temp_file.name)
         conn.row_factory = sqlite3.Row
@@ -45,6 +45,7 @@ class LightsStoreHistoryTest(TestCase):
         entry = rows[0]
         assert_that(entry["timestamp"], is_(TIMESTAMP))
         assert_that(entry["source"], is_(SOURCE))
+        assert_that(entry["state"], is_(True))
 
         history = store.read_history()
         assert_that(history, has_length(1))
@@ -57,3 +58,4 @@ class LightsStoreHistoryTest(TestCase):
         assert_that(entry.datetime, is_(NOW))
         assert_that(entry.timestamp, is_(TIMESTAMP))
         assert_that(entry.source, is_(SOURCE))
+        assert_that(entry.state, is_(True));

@@ -13,7 +13,8 @@ CREATE_TRIGGER_TABLE = """CREATE TABLE IF NOT EXISTS 'triggers' (
     );"""
 
 CREATE_HISTORY_TABLE = """CREATE TABLE IF NOT EXISTS "history" (
-    'timestamp' INTEGER NOT NULL,
+    'timestamp' INTEGER NOT NULL UNIQUE,
+    'state' INTEGER NOT NULL,
     'source' TEXT NOT NULL
     );"""
 
@@ -21,13 +22,13 @@ INSERT_TRIGGER = """INSERT INTO triggers
     (job_id, state, hour, minute, repeat_weekday, repeat_weekend)
     VALUES (?, ?, ?, ?, ?, ?)"""
 
-INSERT_HISTORY = """INSERT INTO history (timestamp, source) VALUES (?, ?)"""
+INSERT_HISTORY = "INSERT INTO history (timestamp, state, source) VALUES (?, ?, ?)"
 
-DELETE_TRIGGER = """DELETE FROM triggers WHERE job_id=?"""
+DELETE_TRIGGER = "DELETE FROM triggers WHERE job_id=?"
 
 
 class LightsSqliteStore:
-    
+
     def __init__(self, database):
         self._database = database
 
@@ -79,11 +80,11 @@ class LightsSqliteStore:
         conn.close()
         return entries
 
-    def add_entry(self, source):
+    def add_entry(self, state, source):
         conn = sqlite3.connect(self._database)
         self._create_tables(conn)
 
         timestamp = int(time.time())
-        conn.execute(INSERT_HISTORY, (timestamp, source))
+        conn.execute(INSERT_HISTORY, (timestamp, state, source))
         conn.commit()
         conn.close()
