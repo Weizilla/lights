@@ -105,7 +105,7 @@ class Lights:
             trigger.next_run_time = int(job.next_run_time.timestamp())
             active_triggers[job_id] = trigger
         self._triggers = active_triggers
-        return list(self._triggers.values())
+        return sorted(self._triggers.values(), key=lambda t: t.next_run_time)
 
     def get_history(self):
         return self._store.read_history() if self._store else []
