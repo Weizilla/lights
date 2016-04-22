@@ -1,5 +1,6 @@
 # lights
 [![Build Status](https://travis-ci.org/Weizilla/lights.svg?branch=master)](https://travis-ci.org/Weizilla/lights)
+[![Circle CI](https://circleci.com/gh/Weizilla/lights/tree/master.svg?style=svg)](https://circleci.com/gh/Weizilla/lights/tree/master)
 
 Raspberry PI Nightlight Controller
 
