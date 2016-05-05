@@ -46,7 +46,7 @@
         <table id="triggers">
             <thead>
             <tr>
-                <th>Next</th>
+                <th class="sort-col">Next</th>
                 <th>State</th>
                 <th>Time</th>
                 <th><i class="fa fa-repeat"></i> M-F</th>
@@ -55,7 +55,7 @@
             </tr>
             </thead>
             <tr class="trigger" ng-repeat="trigger in ctrl.triggers">
-                <td>{{ trigger.nextRunTime | date: 'EEE MMM d h:mm a' }}</td>
+                <td class="sort-col">{{ trigger.nextRunTime | date: 'EEE MMM d h:mm a' }}</td>
                 <td><i class="fa" ng-class="trigger.state ? 'fa-sun-o' : 'fa-moon-o'"></i></td>
                 <td>{{ trigger.time }}</td>
                 <td><i class="fa" ng-class="trigger.repeatWeekday ? 'fa-circle' : 'fa-circle-o'"></i></td>
@@ -71,13 +71,13 @@
         <table id="history">
             <thead>
             <tr>
-                <th>Datetime</th>
+                <th class="sort-col">Datetime</th>
                 <th>State</th>
                 <th>Source</th>
             </tr>
             </thead>
             <tr class="entry" ng-repeat="entry in ctrl.history">
-                <td>{{ entry.datetime | date: 'EEE MMM d h:mm:ss a'}}</td>
+                <td class="sort-col">{{ entry.datetime | date: 'EEE MMM d h:mm:ss a'}}</td>
                 <td><i class="fa" ng-class="entry.state ? 'fa-sun-o' : 'fa-moon-o'"></i></td>
                 <td>{{ entry.source }}</td>
             </tr>

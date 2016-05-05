@@ -3,21 +3,48 @@
     /*border: 2px solid black;*/
 }
 
+/* main */
+
 #main-container {
     display: flex;
     flex-direction: column;
-    max-height: 98vh;
 }
 
 #main-container > * {
     margin: 1%;
 }
 
-#buttons-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 25%;
+.on {
+    background: lightgreen;
 }
+
+.off {
+    background: lightcoral;
+}
+
+/* second level containers */
+
+#buttons-container {
+    font-size: 24px;
+    flex-direction: column;
+    display: flex;
+}
+
+#add-trigger-container {
+    justify-content: space-between;
+    align-items: stretch;
+    display: flex;
+}
+
+#triggers-container {
+    display: flex;
+}
+
+#history-container {
+    display: flex;
+}
+
+/* buttons */
 
 #button-toggle {
     background-color: dodgerblue;
@@ -45,17 +72,8 @@
     background: grey;
 }
 
-#message-container {
-    flex: 1 1 5%;
-}
 
-#add-trigger-container {
-    display: flex;
-    flex: 1 1 10%;
-    justify-content: space-between;
-    align-items: stretch;
-    /*flex-wrap: wrap;*/
-}
+/* add trigger */
 
 #add-trigger-container > * {
     flex: 1 1 auto;
@@ -63,6 +81,8 @@
 
 #add-label {
     align-self: center;
+    text-align: center;
+    font-weight: bold;
 }
 
 #add-repeat-container {
@@ -82,33 +102,19 @@
     background-color: dodgerblue;
 }
 
-#triggers-container {
-    display: flex;
-    flex: 1 1 30%;
-    overflow: auto;
-}
+/* triggers and history tables */
 
-#history-container {
-    display: flex;
-    flex: 1 3 30%;
-    overflow: auto;
-}
-
-#triggers td, #history td, th {
-    text-align: left;
+#triggers td:not(.sort-col), #history td:not(.sort-col), th {
+    text-align: center;
     padding: 1px;
+}
+
+.sort-col {
+    text-align: left;
 }
 
 #triggers, #history {
     width: 100%;
-}
-
-.on {
-    background: lightgreen;
-}
-
-.off {
-    background: lightcoral;
 }
 
 .button-delete {
