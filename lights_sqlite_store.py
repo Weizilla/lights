@@ -24,6 +24,8 @@ INSERT_TRIGGER = """INSERT INTO triggers
 
 INSERT_HISTORY = "INSERT INTO history (timestamp, state, source) VALUES (?, ?, ?)"
 
+GET_HISTORY = "SELECT timestamp, state, source FROM history ORDER BY timestamp DESC LIMIT 10"
+
 DELETE_TRIGGER = "DELETE FROM triggers WHERE job_id=?"
 
 
@@ -75,7 +77,7 @@ class LightsSqliteStore:
         self._create_tables(conn)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        rows = cursor.execute("SELECT * FROM history").fetchall()
+        rows = cursor.execute(GET_HISTORY).fetchall()
         entries = [Entry(**row) for row in rows]
         conn.close()
         return entries
