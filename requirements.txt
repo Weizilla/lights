@@ -1,6 +1,6 @@
 APScheduler==3.3.0
 coverage==4.2
-Flask==1.0
+Flask==1.1
 freezegun==0.3.8
 itsdangerous==0.24
 Jinja2==2.8
